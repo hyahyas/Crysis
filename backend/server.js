@@ -16,9 +16,9 @@ app.use(require("./routes/record"));
 // Get MongoDB driver connection
 const dbo = require("./db/conn");
  
-app.listen(port, () => {
+app.listen(port, async () => {
   // Perform a database connection when server starts
-  dbo.connectToServer(function (err) {
+  await dbo.connectToServer(function (err) {
     if (err) console.error(err);
  
   });
