@@ -98,7 +98,7 @@ recordRoutes.route("/getProfile").get(async (req, res) => {
   }
 });
 
-recordRoutes.route("/updateUser").post(async (req, res) => {
+recordRoutes.route("/updateUser").patch(async (req, res) => {
   try {
     const token = req.header('authorization').split(' ')[1];
     if (!token) {
@@ -127,5 +127,34 @@ recordRoutes.route("/updateUser").post(async (req, res) => {
   }
 });
 
+recordRoutes.route("/deleteUser").post(async (req, res) => {
+  try {
+    // Get the token from the header
+    const token = req.header("authorization").split(" ")[1];
+    if (!token) {
+      return res.status(401).json({ error: "You must be logged in" });
+    }
+
+    // Verify the token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    // Find the user by their ID
+    const user = await User.findById(decoded.userId);
+    if (!user) {
+      return res.status(400).json({ error: "User does not exist" });
+    }
+
+    // Delete the user from the database
+    await User.findByIdAndDelete(decoded.userId);
+
+    // Respond with a success message
+    res.json({ message: "User deleted successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+  
 
 module.exports = recordRoutes;
