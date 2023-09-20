@@ -98,7 +98,34 @@ recordRoutes.route("/getProfile").get(async (req, res) => {
   }
 });
 
-
+recordRoutes.route("/updateUser").post(async (req, res) => {
+  try {
+    const token = req.header('authorization').split(' ')[1];
+    if (!token) {
+      return res.status(401).json({ error: "You must be logged in" });
+    }
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    let user = await User.findById(decoded.userId);
+    if (!user) {
+      return res.status(400).json({ error: "User does not exist" });
+    }
+    if (req.body.name) {
+      user.name = req.body.name;
+    }
+    if (req.body.email) {
+      user.email = req.body.email;
+    }
+    if (req.body.password) {
+      const hashedPassword = await bcrypt.hash(req.body.password, 10);
+      user.password = hashedPassword;
+    }
+    await user.save();
+    res.json({ user: { name: user.name, email: user.email } });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
 
 
 module.exports = recordRoutes;
