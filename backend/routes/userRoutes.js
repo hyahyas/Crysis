@@ -125,6 +125,7 @@ recordRoutes.route("/updateUser").patch(async (req, res) => {
     console.error(err);
     res.status(500).json({ error: "Internal server error" });
   }
+  
 });
 
 recordRoutes.route("/deleteUser").post(async (req, res) => {
