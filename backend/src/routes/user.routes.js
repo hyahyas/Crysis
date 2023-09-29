@@ -59,9 +59,9 @@ recordRoutes.route("/signIn").post(
 // refresh token api to generate new access token
 recordRoutes.route("/refreshToken").post(refreshToken);
 
-recordRoutes.route("/getProfile").get(getProfile);
+recordRoutes.route("/user").get(getProfile);
 
-recordRoutes.route("/updateUser").patch(
+recordRoutes.route("/user").patch(
   [
     // Validate name (optional)
     body("name").optional().notEmpty().withMessage("Name is required"),
@@ -81,7 +81,7 @@ recordRoutes.route("/updateUser").patch(
   updateUser
 );
 
-recordRoutes.route("/deleteUser").post(deleteUser);
+recordRoutes.route("/user").delete(deleteUser);
 
   
 

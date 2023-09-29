@@ -127,8 +127,8 @@ module.exports.updateUser = async (req, res) => {
     if (!token) {
       return res.status(401).json({ error: "You must be logged in" });
     }
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    let user = await User.findById(decoded.userId);
+    const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+    let user = await User.findById(decoded.id);
     if (!user) {
       return res.status(400).json({ error: "User does not exist" });
     }
@@ -167,10 +167,10 @@ module.exports.deleteUser = async (req, res) => {
     }
 
     // Verify the token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
 
     // Find the user by their ID
-    const user = await User.findById(decoded.userId);
+    const user = await User.findById(decoded.id);
     if (!user) {
       return res.status(400).json({ error: "User does not exist" });
     }

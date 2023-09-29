@@ -12,6 +12,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use(require("./src/routes/user.routes"));
+app.use(require("./src/routes/announcement.routes"))
 
 require("./src/db/conn");
  
