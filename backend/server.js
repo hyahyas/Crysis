@@ -13,7 +13,9 @@ app.use(express.json());
 
 app.use(require("./src/routes/user.routes"));
 app.use(require("./src/routes/announcement.routes"))
-
+app.use(require("./src/routes/server.routes"))
+app.use(require("./src/routes/tickets.routes"))
+app.use(require("./src/routes/restraunts.routes"))
 require("./src/db/conn");
  
 app.listen(port, async () => {

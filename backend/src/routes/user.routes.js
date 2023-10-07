@@ -2,7 +2,7 @@ const express = require("express");
 const { body } = require("express-validator");
 const User = require("../models/user.model");
 const { signUp, signIn, getProfile, updateUser, deleteUser, refreshToken } = require("../controllers/user.controller");
- 
+
 // recordRoutes is an instance of the express router.
 const recordRoutes = express.Router();
 
@@ -83,6 +83,6 @@ recordRoutes.route("/user").patch(
 
 recordRoutes.route("/user").delete(deleteUser);
 
-  
+
 
 module.exports = recordRoutes;
