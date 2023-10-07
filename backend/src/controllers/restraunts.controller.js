@@ -55,6 +55,45 @@ exports.getAllRestraunts = async (req, res) => {
     }
   };
   
+// Get all restaurants with meals sorted by calories
+exports.getAllRestaurantsWithMealsSortedByCalories = async (req, res) => {
+    try {
+      const restaurants = await restraunts.find({}).populate('meals');
+  
+      const restaurantsWithMealsGroupedByCalories = restaurants.map((restaurant) => {
+        const mealsGroupedByCalories = {};
+  
+        restaurant.meals.forEach((meal) => {
+          const calorieRange = Math.floor(meal.calories / 100) * 100;
+  
+          if (!mealsGroupedByCalories[calorieRange]) {
+            mealsGroupedByCalories[calorieRange] = [];
+          }
+  
+          mealsGroupedByCalories[calorieRange].push({
+            _id: meal._id,
+            name: meal.name,
+            calories: meal.calories,
+            mb: meal.mb,
+          });
+        });
+  
+        return {
+          _id: restaurant._id,
+          name: restaurant.name,
+          mealsGroupedByCalories,
+        };
+      });
+  
+      res.json(restaurantsWithMealsGroupedByCalories);
+    } catch (err) {
+      handleError(res, err);
+    }
+  };
+  
+  
+  
+  
   
 
 
