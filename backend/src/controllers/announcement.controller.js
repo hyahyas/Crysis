@@ -25,7 +25,7 @@ exports.getAnnouncements = async (req, res) => {
   try {
     const token = req.headers["authorization"].split(" ")[1];
     const user = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-    const announcements = await Announcement.find({ createdBy: user.id });
+    const announcements = await Announcement.find({ createdBy: user.id }).populate('createdBy');
     res.json(announcements);
   } catch (err) {
     res.status(500).json({ message: err });

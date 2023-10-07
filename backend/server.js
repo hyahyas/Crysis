@@ -13,6 +13,7 @@ app.use(express.json());
 
 app.use(require("./src/routes/user.routes"));
 app.use(require("./src/routes/announcement.routes"))
+app.use(require("./src/routes/quiz.route"))
 
 require("./src/db/conn");
  
