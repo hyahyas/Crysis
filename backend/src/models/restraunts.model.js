@@ -1,6 +1,4 @@
 const mongoose = require('mongoose');
-
-
 const mealsSchema = new mongoose.Schema({
     calories: Number,
     name: String,
@@ -10,7 +8,6 @@ const mealsSchema = new mongoose.Schema({
         ref: 'Restraunts'
     }
 });
-
 const restrauntsSchema = new mongoose.Schema({
     name: String,
     icon: String,
