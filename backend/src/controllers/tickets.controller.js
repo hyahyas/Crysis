@@ -122,14 +122,17 @@ exports.deleteTicket = async (req, res) => {
 // Get tickets by status
 exports.getTicketsByStatus = async (req, res) => {
     try {
-      const { status } = req.params;
-      const token = req.headers['authorization'].split(' ')[1];
-      const user = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-      const serverId = user.serverId;
-  
-      const tickets = await Ticket.find({ server: serverId, status: status }).populate('assignee', 'name');
-  
+      const status = req.body.status;
+      const serverId = req.body.serverId;
+      //const token = req.headers['authorization'].split(' ')[1];
+      //const user = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+      //const serverId = user.serverId;
+      console.log(status);
+      console.log(serverId);
+      const tickets = await Ticket.find({ server: serverId, status: status });
+      console.log("Reached here")
       res.json(tickets);
+      console.log(tickets);
     } catch (err) {
       handleError(res, err);
     }
@@ -139,12 +142,14 @@ exports.getTicketsByStatus = async (req, res) => {
 // Get tickets by assignee
 exports.getTicketsByAssignee = async (req, res) => {
     try {
-      const { assigneeId } = req.params;
-      const token = req.headers['authorization'].split(' ')[1];
-      const user = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-      const serverId = user.serverId;
+      const assigneeId = req.body.assigneeId;
+      const serverId = req.body.serverId;
+
+    //   const token = req.headers['authorization'].split(' ')[1];
+    //   const user = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+    //   const serverId = user.serverId;
   
-      const tickets = await Ticket.find({ server: serverId, assignee: assigneeId }).populate('assignee', 'name');
+      const tickets = await Ticket.find({ server: serverId, assignee: assigneeId });
   
       res.json(tickets);
     } catch (err) {
@@ -156,14 +161,13 @@ exports.getTicketsByAssignee = async (req, res) => {
 // Change ticket status
 exports.changeTicketStatus = async (req, res) => {
     try {
-      const { status } = req.body;
+      const status = req.body.status;
       const token = req.headers['authorization'].split(' ')[1];
       const user = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-      const { ticketId } = req.params;
-      const serverId = user.serverId;
+      const ticketId= req.body.ticketId;
   
       // Ensure the ticket belongs to the user's server
-      const ticket = await Ticket.findOne({ _id: ticketId, server: serverId });
+      const ticket = await Ticket.findOne({ _id: ticketId });
       if (!ticket) {
         return res.status(404).json({ error: 'Ticket not found' });
       }
@@ -178,27 +182,5 @@ exports.changeTicketStatus = async (req, res) => {
   };
   
 
-// Change ticket assignee
-exports.changeTicketAssignee = async (req, res) => {
-    try {
-      const { assigneeId } = req.body;
-      const token = req.headers['authorization'].split(' ')[1];
-      const user = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-      const { ticketId } = req.params;
-      const serverId = user.serverId;
-  
-      // Ensure the ticket belongs to the user's server
-      const ticket = await Ticket.findOne({ _id: ticketId, server: serverId });
-      if (!ticket) {
-        return res.status(404).json({ error: 'Ticket not found' });
-      }
-  
-      ticket.assignee = assigneeId;
-      await ticket.save();
-  
-      res.json({ message: 'Ticket assignee updated successfully', ticket });
-    } catch (err) {
-      handleError(res, err);
-    }
-  };
+
   

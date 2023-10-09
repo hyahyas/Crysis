@@ -6,7 +6,6 @@ const {
   getTicketById,
   updateTicket,
   deleteTicket,
-    changeTicketAssignee,
     changeTicketStatus,
     getTicketsByAssignee,
     getTicketsByStatus
@@ -53,17 +52,14 @@ ticketRoutes.delete(
   deleteTicket
 );
 
-// Change ticket assignee
-ticketRoutes.put('/changeTicketAssignee/:ticketId', changeTicketAssignee);
-
 // Change ticket status
-ticketRoutes.put('/changeTicketStatus/:ticketId', changeTicketStatus);
+ticketRoutes.put('/changeTicketStatus', changeTicketStatus);
 
 // Get tickets by assignee
-ticketRoutes.get('/getTicketsByAssignee/:assigneeId', getTicketsByAssignee);
+ticketRoutes.get('/getTicketsByAssignee', getTicketsByAssignee);
 
 // Get tickets by status
-ticketRoutes.get('/getTicketsByStatus/:status', getTicketsByStatus);
+ticketRoutes.get('/getTicketsByStatus', getTicketsByStatus);
 
 
 
