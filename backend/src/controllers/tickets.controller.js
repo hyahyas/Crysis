@@ -49,12 +49,9 @@ exports.getAllTickets = async (req, res) => {
       const user = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
   
       // Get the serverId from the query parameters, if provided
-      const queryServerId = req.query.serverId;
-  
-      // Determine which server to use (current server or specified server)
-      const serverToUse = queryServerId || user.currentServer || user.serverId;
-  
-      const tickets = await Ticket.find({ server: serverToUse }).populate('assignee', 'name');
+      const queryServerId = req.params.serverId;
+    
+      const tickets = await Ticket.find({ server: queryServerId });
   
       res.json(tickets);
     } catch (err) {
@@ -66,7 +63,7 @@ exports.getAllTickets = async (req, res) => {
 // Get a single ticket by ID
 exports.getTicketById = async (req, res) => {
   try {
-    const ticket = await Ticket.findById(req.params.ticketId).populate('assignee', 'name');
+    const ticket = await Ticket.findById(req.params.ticketId);
 
     if (!ticket) {
       return res.status(404).json({ error: 'Ticket not found' });
