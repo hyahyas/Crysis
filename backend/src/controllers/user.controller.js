@@ -9,9 +9,14 @@ const handleError = (res, error) => {
   res.status(500).json({ error: "Internal server error" });
 };
 
+const logEndPoint = (type, url) => {
+  console.log(new Date().toLocaleString(), '--->', type, ' ', url)
+}
 
 // Controller for user sign-up
 exports.signUp = async (req, res) => {
+  logEndPoint('POST', '/signUp');
+
   // Check for validation errors
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -39,7 +44,8 @@ exports.signUp = async (req, res) => {
 
 // Controller for user sign-in
 module.exports.signIn = async (req, res) => {
-  console.log("in signIn");
+  logEndPoint('POST', '/signIn');
+  
   // Check for validation errors
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -78,6 +84,8 @@ module.exports.signIn = async (req, res) => {
 
 // Controller for token refresh
 module.exports.refreshToken = async (req, res) => {
+  logEndPoint('POST', '/refreshToken');
+
   try {
     // token in authorization header
     const token = req.headers["authorization"].split(" ")[1];
@@ -93,6 +101,8 @@ module.exports.refreshToken = async (req, res) => {
 
 // Read
 module.exports.getProfile = async (req, res) => {
+  logEndPoint('GET', '/getProfile');
+
   try {
     // Get the token from the header
     const token = req.header('authorization').split(' ')[1];
@@ -116,6 +126,8 @@ module.exports.getProfile = async (req, res) => {
 
 // update
 module.exports.updateUser = async (req, res) => {
+  logEndPoint('PATCH', '/updateUser');
+
   // Check for validation errors
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -159,6 +171,8 @@ module.exports.updateUser = async (req, res) => {
 
 // delete
 module.exports.deleteUser = async (req, res) => {
+  logEndPoint('DELETE', '/deleteUser');
+
   try {
     // Get the token from the header
     const token = req.header("authorization").split(" ")[1];

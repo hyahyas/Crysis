@@ -1,8 +1,14 @@
 const Announcement = require("../models/announcement.model");
 const jwt = require("jsonwebtoken");
 
+const logEndPoint = (type, url) => {
+  console.log(new Date().toLocaleString(), '--->', type, ' ', url)
+}
+
 // Create
 exports.createAnnouncement = async (req, res) => {
+  logEndPoint('POST', '/announcements');
+
   try {
     // bearer token in header
     const token = req.headers["authorization"].split(" ")[1];
@@ -22,6 +28,8 @@ exports.createAnnouncement = async (req, res) => {
 
 // Read
 exports.getAnnouncements = async (req, res) => {
+  logEndPoint('GET', '/announcements');
+
   try {
     const token = req.headers["authorization"].split(" ")[1];
     const user = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
@@ -34,6 +42,8 @@ exports.getAnnouncements = async (req, res) => {
 
 // Update
 exports.updateAnnouncement = async (req, res) => {
+  logEndPoint('PUT', '/announcements/:id');
+
   try{
     const token = req.headers["authorization"].split(" ")[1];
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
@@ -48,6 +58,8 @@ exports.updateAnnouncement = async (req, res) => {
 
 // Delete
 exports.deleteAnnouncement = async (req, res) => {
+  logEndPoint('DELETE', '/announcements/:id');
+
   try {
     const token = req.headers["authorization"].split(" ")[1];
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
