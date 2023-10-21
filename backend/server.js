@@ -14,6 +14,7 @@ app.use(express.json());
 app.use(require("./src/routes/user.routes"));
 app.use(require("./src/routes/announcement.routes"))
 app.use(require("./src/routes/server.routes"))
+app.use(require("./src/routes/chat.routes"))
 app.use(require("./src/routes/tickets.routes"))
 require("./src/db/conn");
  
