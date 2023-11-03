@@ -40,7 +40,7 @@ recordRoutes.route("/signUp").post(async (req, res) => {
     }
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
-    // Create a new user
+
     const newUser = new User({ name, password:hashedPassword, email });
     await newUser.save();
 
@@ -66,7 +66,7 @@ recordRoutes.route("/signIn").post(async (req, res) => {
     }
     // Create and send a JWT token upon successful login
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "1h", // Token expiration time
+      expiresIn: "1h", 
     });
 
     res.json({ message: "Sign in successful", token});
@@ -145,10 +145,9 @@ recordRoutes.route("/deleteUser").post(async (req, res) => {
       return res.status(400).json({ error: "User does not exist" });
     }
 
-    // Delete the user from the database
+
     await User.findByIdAndDelete(decoded.userId);
 
-    // Respond with a success message
     res.json({ message: "User deleted successfully" });
   } catch (err) {
     console.error(err);
