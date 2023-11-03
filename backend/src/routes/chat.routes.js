@@ -23,7 +23,7 @@ chatRoutes.route('/getHistory/:serverId').get(
 );
 
 // Get a single message by ID
-chatRoutes.route('/getMessage/:messageId').get(
+chatRoutes.route('/message/:messageId').get(
   [
     param('messageId').isMongoId().withMessage('Invalid message ID')
   ],
@@ -31,7 +31,7 @@ chatRoutes.route('/getMessage/:messageId').get(
 );
 
 // Update a message by ID
-chatRoutes.route('/updateMessage/:messageId').patch(
+chatRoutes.route('/message/:messageId').patch(
   [
     param('messageId').isMongoId().withMessage('Invalid message ID'),
     body('body').notEmpty().withMessage('Message body is required'),
@@ -40,7 +40,7 @@ chatRoutes.route('/updateMessage/:messageId').patch(
 );
 
 // Delete a message by ID
-chatRoutes.route('/deleteMessage/:messageId').delete(
+chatRoutes.route('/message/:messageId').delete(
   [
     param('messageId').isMongoId().withMessage('Invalid message ID')
   ],

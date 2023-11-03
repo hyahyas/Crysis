@@ -29,14 +29,14 @@ ticketRoutes.get('/getAllTickets/:serverId', getAllTickets);
 
 // Get a single ticket by ID
 ticketRoutes.get(
-  '/getTicket/:ticketId',
+  '/ticket/:ticketId',
   [param('ticketId').isMongoId().withMessage('Invalid ticket ID')],
   getTicketById
 );
 
 // Update a ticket by ID
 ticketRoutes.patch(
-  '/updateTicket/:ticketId',
+  '/ticket/:ticketId',
   [
     param('ticketId').isMongoId().withMessage('Invalid ticket ID'),
     body('title').notEmpty().withMessage('Ticket title is required'),
@@ -47,7 +47,7 @@ ticketRoutes.patch(
 
 // Delete a ticket by ID
 ticketRoutes.delete(
-  '/deleteTicket/:ticketId',
+  '/ticket/:ticketId',
   [param('ticketId').isMongoId().withMessage('Invalid ticket ID')],
   deleteTicket
 );

@@ -25,14 +25,14 @@ serverRoutes.get('/getAllServers', getAllServers);
 
 // Get a single server by ID
 serverRoutes.get(
-  '/getServer/:serverId',
+  '/server/:serverId',
   [param('serverId').isMongoId().withMessage('Invalid server ID')],
   getServerById
 );
 
 // Update a server by ID
 serverRoutes.patch(
-  '/updateServer/:serverId',
+  '/server/:serverId',
   [
     param('serverId').isMongoId().withMessage('Invalid server ID'),
     body('name').notEmpty().withMessage('Server name is required'),
@@ -43,7 +43,7 @@ serverRoutes.patch(
 
 // Delete a server by ID
 serverRoutes.delete(
-  '/deleteServer/:serverId',
+  '/server/:serverId',
   [param('serverId').isMongoId().withMessage('Invalid server ID')],
   deleteServer
 );
