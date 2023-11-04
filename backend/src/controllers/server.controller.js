@@ -8,8 +8,14 @@ const handleError = (res, error) => {
   res.status(500).json({ error: 'Internal server error' });
 };
 
+const logEndPoint = (type, url) => {
+  console.log(new Date().toLocaleString(), '--->', type, ' ', url)
+}
+
 // Controller to create a new server
 exports.createServer = async (req, res) => {
+  logEndPoint('POST', '/createServer');
+
     // Check for validation errors
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -44,6 +50,8 @@ exports.createServer = async (req, res) => {
 
 // Controller to get all servers
 exports.getAllServers = async (req, res) => {
+  logEndPoint('GET', '/getAllServers');
+
   try {
     const servers = await Server.find({}).populate('owner', 'name'); // Populate owner details
 
@@ -55,6 +63,8 @@ exports.getAllServers = async (req, res) => {
 
 // Controller to get a single server by ID
 exports.getServerById = async (req, res) => {
+  logEndPoint('GET', '/getServer/:serverId');
+
   try {
     console.log(req.params.serverId)
     const server = await Server.findById(req.params.serverId).populate('owner', 'name'); // Populate owner details
@@ -71,6 +81,8 @@ exports.getServerById = async (req, res) => {
 
 // Controller to update a server by ID
 exports.updateServer = async (req, res) => {
+  logEndPoint('PUT', '/updateServer/:serverId');
+
   // Check for validation errors
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -99,6 +111,8 @@ exports.updateServer = async (req, res) => {
 
 // Controller to delete a server by ID
 exports.deleteServer = async (req, res) => {
+  logEndPoint('DELETE', '/deleteServer/:serverId');
+
   try {
     const serverId = req.params.serverId;
 
@@ -113,5 +127,3 @@ exports.deleteServer = async (req, res) => {
     handleError(res, err);
   }
 };
-
-// Rest of your controller functions...

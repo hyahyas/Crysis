@@ -8,11 +8,15 @@ const handleError = (res, error) => {
   res.status(500).json({ error: 'Internal server error' });
 };
 
+const logEndPoint = (type, url) => {
+  console.log(new Date().toLocaleString(), '--->', type, ' ', url)
+}
+
 // Create a new ticket
 exports.createTicket = async (req, res) => {
     // Inside createTicket controller
 
-console.log('Received POST request to create a ticket');
+  logEndPoint('POST', '/createTicket');
 
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -44,6 +48,8 @@ console.log('Received POST request to create a ticket');
 
 // Get all tickets for the user's current server or a specified server
 exports.getAllTickets = async (req, res) => {
+  logEndPoint('GET', '/getAllTickets');
+
     try {
       const token = req.headers['authorization'].split(' ')[1];
       const user = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
@@ -62,6 +68,8 @@ exports.getAllTickets = async (req, res) => {
   
 // Get a single ticket by ID
 exports.getTicketById = async (req, res) => {
+  logEndPoint('GET', '/getTicket/:ticketId');
+
   try {
     const ticket = await Ticket.findById(req.params.ticketId);
 
@@ -77,6 +85,8 @@ exports.getTicketById = async (req, res) => {
 
 // Update a ticket by ID
 exports.updateTicket = async (req, res) => {
+  logEndPoint('PATCH', '/updateTicket/:ticketId');
+
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
@@ -104,6 +114,8 @@ exports.updateTicket = async (req, res) => {
 
 // Delete a ticket by ID
 exports.deleteTicket = async (req, res) => {
+  logEndPoint('DELETE', '/deleteTicket/:ticketId');
+
   try {
     const ticketId = req.params.ticketId;
 
@@ -121,6 +133,8 @@ exports.deleteTicket = async (req, res) => {
 
 // Get tickets by status
 exports.getTicketsByStatus = async (req, res) => {
+  logEndPoint('GET', '/getTicketsByStatus');
+
     try {
       const status = req.body.status;
       const serverId = req.body.serverId;
@@ -141,6 +155,8 @@ exports.getTicketsByStatus = async (req, res) => {
 
 // Get tickets by assignee
 exports.getTicketsByAssignee = async (req, res) => {
+  logEndPoint('GET', '/getTicketsByAssignee');
+
     try {
       const assigneeId = req.body.assigneeId;
       const serverId = req.body.serverId;
@@ -160,6 +176,8 @@ exports.getTicketsByAssignee = async (req, res) => {
 
 // Change ticket status
 exports.changeTicketStatus = async (req, res) => {
+  logEndPoint('PATCH', '/changeTicketStatus');
+
     try {
       const status = req.body.status;
       const token = req.headers['authorization'].split(' ')[1];
@@ -173,6 +191,7 @@ exports.changeTicketStatus = async (req, res) => {
       }
   
       ticket.status = status;
+      ticket.updatedAt = Date.now();
       await ticket.save();
   
       res.json({ message: 'Ticket status updated successfully', ticket });
