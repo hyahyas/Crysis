@@ -8,8 +8,8 @@ function App() {
     <div className="App">
       <header className="App-header">
         {/* Replace the default content with the login and sign up components */}
-        {/* <Login /> */}
-        <SignUp />
+        <Login/>
+        {/* <SignUp/> */}
       </header>
     </div>
   );
