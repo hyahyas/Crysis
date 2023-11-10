@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import axios from "axios";
-import './signup.css'
-
+import "./signup.css";
+import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [name, setName] = useState("");
-
+    const navigate = useNavigate();
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -15,7 +15,7 @@ const Signup = () => {
             const response = await axios.post("http://localhost:5000/signUp/", {
                 name,
                 email,
-                password 
+                password,
             });
             console.log(response.data); // Handle the response data as needed
         } catch (error) {
@@ -23,15 +23,16 @@ const Signup = () => {
         }
     };
 
+    const goToLogin = () => {
+        navigate("/");
+    };
+
     return (
         <>
             <div className="container">
                 <div className="Left">
                     <h5>Welcome to Crysis</h5>
-                    {/* <br /> */}
                     <p>Got a crysis? Get Crysis</p>
-                    <p>Sign up</p>
-
                 </div>
 
                 <div className="Right">
@@ -59,11 +60,12 @@ const Signup = () => {
                         <div>
                             <button type="submit">Signup</button>
                         </div>
+                        <a onClick={goToLogin}>
+                            Already have an account? Login
+                        </a>
                     </form>
                 </div>
-
             </div>
-
         </>
     );
 };
