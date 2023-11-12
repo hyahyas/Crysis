@@ -1,14 +1,36 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const serverSchema = mongoose.Schema({
-  name: { type: String, required: true },
-  description: { type: String },
-  owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  members: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }], // Array of user ObjectIds
-  admins: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }], // Array of admin ObjectIds (including the owner)
-  // You can add more fields as needed for your server
+    name: { type: String, required: true },
+    description: { type: String },
+    owner: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
+    },
+    createdAt: { type: Date, default: Date.now },
 });
 
-const Server = mongoose.model('Server', serverSchema, 'Servers');
+const Server = mongoose.model("Server", serverSchema, "Servers");
 
-module.exports = Server;
+const membershipSchema = mongoose.Schema({
+    member: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
+    },
+    server: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Server",
+        required: true,
+    },
+    isAdmin: { type: Boolean, default: false },
+});
+
+const Membership = mongoose.model(
+    "Membership",
+    membershipSchema,
+    "Memberships"
+);
+
+module.exports = { Server, Membership };

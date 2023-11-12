@@ -1,129 +1,175 @@
-const Server = require('../models/server.model');
-const { validationResult } = require('express-validator');
-const jwt = require('jsonwebtoken');
+const { Server, Membership } = require("../models/server.model");
+const { validationResult } = require("express-validator");
+const jwt = require("jsonwebtoken");
 
 // Define a centralized error handling function
 const handleError = (res, error) => {
-  console.error(error);
-  res.status(500).json({ error: 'Internal server error' });
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
 };
 
 const logEndPoint = (type, url) => {
-  console.log(new Date().toLocaleString(), '--->', type, ' ', url)
-}
+    console.log(new Date().toLocaleString(), "--->", type, " ", url);
+};
 
 // Controller to create a new server
 exports.createServer = async (req, res) => {
-  logEndPoint('POST', '/createServer');
+    logEndPoint("POST", "/createServer");
 
     // Check for validation errors
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+        return res.status(400).json({ errors: errors.array() });
     }
-  
+
     try {
-      // Create a new server
-      const token = req.headers['authorization'].split(' ')[1];
-      const user = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-      const { name, description } = req.body;
-      const ownerId = user.id;
-  
-      // Make the owner an admin by default
-      const server = new Server({
-        name,
-        description,
-        owner: ownerId,
-        members: [ownerId], // Add the owner to the members array
-        admins: [ownerId],  // Add the owner to the admins array
-      });
-  
-      await server.save();
-  
-      res.json({ message: 'Server created successfully', server });
+        // Create a new server
+        const token = req.headers["authorization"].split(" ")[1];
+        const user = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+        const { name, description } = req.body;
+        const ownerId = user.id;
+
+        // Make the owner an admin by default
+        const server = new Server({
+            name,
+            description,
+            owner: ownerId,
+        });
+
+        await server.save();
+
+        const membership = new Membership({
+            member: ownerId,
+            server: server._id,
+            isAdmin: true,
+        });
+
+        await membership.save();
+
+        res.json({ message: "Server created successfully", server });
     } catch (err) {
-      // Handle errors using the centralized error handling function
-      handleError(res, err);
+        // Handle errors using the centralized error handling function
+        handleError(res, err);
     }
-  };
-  
+};
 
 // Controller to get all servers
 exports.getAllServers = async (req, res) => {
-  logEndPoint('GET', '/getAllServers');
+    logEndPoint("GET", "/getAllServers");
 
-  try {
-    const servers = await Server.find({}).populate('owner', 'name'); // Populate owner details
+    try {
+        const servers = await Server.find({}).populate("owner", "name"); // Populate owner details
 
-    res.json(servers);
-  } catch (err) {
-    handleError(res, err);
-  }
+        servers.map(async (server) => {
+            const members = await Membership.find({
+                server: server._id,
+            }).populate("member", "name");
+            console.log(members);
+            server.members = members.map(async (member) => member.member);
+        });
+
+        res.json(servers);
+    } catch (err) {
+        handleError(res, err);
+    }
+};
+
+// Controller to get all servers of a user
+exports.getMyServers = async (req, res) => {
+    logEndPoint("GET", "/getMyServers");
+
+    try {
+        const token = req.headers["authorization"].split(" ")[1];
+        const user = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+        const userId = user.id;
+
+        // get role from query params and return those servers
+        const role = req.query.role;
+
+        const memberships = await Membership.find({
+            member: userId,
+        }).populate("server", "name");
+
+        const servers = memberships.map((membership) => membership.server);
+
+        res.json(servers);
+    } catch (err) {
+        handleError(res, err);
+    }
 };
 
 // Controller to get a single server by ID
 exports.getServerById = async (req, res) => {
-  logEndPoint('GET', '/getServer/:serverId');
+    logEndPoint("GET", "/getServer/:serverId");
 
-  try {
-    console.log(req.params.serverId)
-    const server = await Server.findById(req.params.serverId).populate('owner', 'name'); // Populate owner details
-    console.log(server)
-    if (!server) {
-      return res.status(404).json({ error: 'Server not found' });
+    try {
+        console.log(req.params.serverId);
+        const server = await Server.findById(req.params.serverId).populate(
+            "owner",
+            "name"
+        ); // Populate owner details
+        console.log(server);
+        if (!server) {
+            return res.status(404).json({ error: "Server not found" });
+        }
+
+        res.json(server);
+    } catch (err) {
+        handleError(res, err);
     }
-
-    res.json(server);
-  } catch (err) {
-    handleError(res, err);
-  }
 };
 
 // Controller to update a server by ID
 exports.updateServer = async (req, res) => {
-  logEndPoint('PUT', '/updateServer/:serverId');
+    logEndPoint("PUT", "/updateServer/:serverId");
 
-  // Check for validation errors
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
-  try {
-    const { name, description } = req.body;
-    const serverId = req.params.serverId;
-
-    const updatedServer = await Server.findByIdAndUpdate(
-      serverId,
-      { name, description },
-      { new: true }
-    );
-
-    if (!updatedServer) {
-      return res.status(404).json({ error: 'Server not found' });
+    // Check for validation errors
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
     }
 
-    res.json({ message: 'Server updated successfully', server: updatedServer });
-  } catch (err) {
-    handleError(res, err);
-  }
+    try {
+        const { name, description } = req.body;
+        const serverId = req.params.serverId;
+
+        const updatedServer = await Server.findByIdAndUpdate(
+            serverId,
+            { name, description },
+            { new: true }
+        );
+
+        if (!updatedServer) {
+            return res.status(404).json({ error: "Server not found" });
+        }
+
+        res.json({
+            message: "Server updated successfully",
+            server: updatedServer,
+        });
+    } catch (err) {
+        handleError(res, err);
+    }
 };
 
 // Controller to delete a server by ID
 exports.deleteServer = async (req, res) => {
-  logEndPoint('DELETE', '/deleteServer/:serverId');
+    logEndPoint("DELETE", "/deleteServer/:serverId");
 
-  try {
-    const serverId = req.params.serverId;
+    try {
+        const serverId = req.params.serverId;
 
-    const deletedServer = await Server.findByIdAndDelete(serverId);
+        const deletedServer = await Server.findByIdAndDelete(serverId);
 
-    if (!deletedServer) {
-      return res.status(404).json({ error: 'Server not found' });
+        if (!deletedServer) {
+            return res.status(404).json({ error: "Server not found" });
+        }
+
+        res.json({
+            message: "Server deleted successfully",
+            server: deletedServer,
+        });
+    } catch (err) {
+        handleError(res, err);
     }
-
-    res.json({ message: 'Server deleted successfully', server: deletedServer });
-  } catch (err) {
-    handleError(res, err);
-  }
 };

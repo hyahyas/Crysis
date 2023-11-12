@@ -2,71 +2,78 @@ const Announcement = require("../models/announcement.model");
 const jwt = require("jsonwebtoken");
 
 const logEndPoint = (type, url) => {
-  console.log(new Date().toLocaleString(), '--->', type, ' ', url)
-}
+    console.log(new Date().toLocaleString(), "--->", type, " ", url);
+};
 
 // Create
 exports.createAnnouncement = async (req, res) => {
-  logEndPoint('POST', '/announcements');
+    logEndPoint("POST", "/announcements");
 
-  try {
-    // bearer token in header
-    const token = req.headers["authorization"].split(" ")[1];
-    const user = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-    const { title, description} = req.body;
-    const newAnnouncement = new Announcement({
-      title,
-      description,
-      createdBy: user.id,
-    });
-    await newAnnouncement.save();
-    res.json({ message: "Announcement created successfully" });
-  } catch (err) {
-    res.status(500).json({ message: err });
-  }
-}
+    try {
+        // bearer token in header
+        const token = req.headers["authorization"].split(" ")[1];
+        const user = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+        const { title, description } = req.body;
+        const newAnnouncement = new Announcement({
+            title,
+            description,
+            createdBy: user.id,
+            server: req.params.serverId,
+        });
+        await newAnnouncement.save();
+        res.json({ message: "Announcement created successfully" });
+    } catch (err) {
+        res.status(500).json({ message: err });
+    }
+};
 
 // Read
 exports.getAnnouncements = async (req, res) => {
-  logEndPoint('GET', '/announcements');
+    logEndPoint("GET", "/announcements");
 
-  try {
-    const token = req.headers["authorization"].split(" ")[1];
-    const user = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-    const announcements = await Announcement.find({ createdBy: user.id });
-    res.json(announcements);
-  } catch (err) {
-    res.status(500).json({ message: err });
-  }
-}
+    try {
+        const token = req.headers["authorization"].split(" ")[1];
+        const user = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+        // get all announcements created in a server
+        const serverId = req.body.serverId;
+
+        const announcements = await Announcement.find({ createdBy: user.id });
+        res.json(announcements);
+    } catch (err) {
+        res.status(500).json({ message: err });
+    }
+};
 
 // Update
 exports.updateAnnouncement = async (req, res) => {
-  logEndPoint('PUT', '/announcements/:id');
+    logEndPoint("PUT", "/announcements/:id");
 
-  try{
-    const token = req.headers["authorization"].split(" ")[1];
-    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-    // user can update title or description or both
-    const { title, description } = req.body;
-    await Announcement.findByIdAndUpdate(req.params.id, { title, description });
-    res.json({ message: "Announcement updated successfully" });
-  } catch (err) {
-    res.status(500).json({ message: err });
-  }
-}
+    try {
+        const token = req.headers["authorization"].split(" ")[1];
+        jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+        // user can update title or description or both
+        const { title, description } = req.body;
+        await Announcement.findByIdAndUpdate(req.params.id, {
+            title,
+            description,
+        });
+        res.json({ message: "Announcement updated successfully" });
+    } catch (err) {
+        res.status(500).json({ message: err });
+    }
+};
 
 // Delete
 exports.deleteAnnouncement = async (req, res) => {
-  logEndPoint('DELETE', '/announcements/:id');
+    logEndPoint("DELETE", "/announcements/:id");
 
-  try {
-    const token = req.headers["authorization"].split(" ")[1];
-    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-    // hard delete right now
-    await Announcement.findByIdAndDelete(req.params.id);
-    res.json({ message: "Announcement deleted successfully" });
-  } catch (err) {
-    res.status(500).json({ message: err });
-  }
-}
+    try {
+        const token = req.headers["authorization"].split(" ")[1];
+        jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+        // hard delete right now
+        await Announcement.findByIdAndDelete(req.params.id);
+        res.json({ message: "Announcement deleted successfully" });
+    } catch (err) {
+        res.status(500).json({ message: err });
+    }
+};
