@@ -42,7 +42,7 @@ const Login = () => {
                 <div className="Left">
                     <h5>Welcome to Crysis</h5>
                     {/* <br /> */}
-                    <p>Got a crysis? Get Crysis</p>
+                    <p>Got a crisis? Get Crysis</p>
                 </div>
 
                 <div className="Right">
