@@ -71,32 +71,6 @@ exports.createAnnouncement = async (req, res) => {
 
 };
 
-// exports.createAnnouncement = async (req, res) => {
-//     logEndPoint("POST", "/announcements");
-
-//     try {
-//         // Call the checkUserInServerAndAdmin middleware before proceeding
-//         //const x = await checkUserInServerAndAdmin(req, res);
-//         //console.log(x)
-//         // bearer token in header
-//         const token = req.headers["authorization"].split(" ")[1];
-//         const user = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-//         const { title, description } = req.body;
-
-//         // Create a new announcement
-//         const newAnnouncement = new Announcement({
-//             title,
-//             description,
-//             createdBy: user.id,
-//             server: req.params.serverId,
-//         });
-
-//         await newAnnouncement.save();
-//         res.json({ message: "Announcement created successfully" });
-//     } catch (err) {
-//         res.status(500).json({ message: "asa" });
-//     }
-// };
 
 
 // Read
@@ -105,15 +79,47 @@ exports.getAnnouncements = async (req, res) => {
 
     try {
         const token = req.headers["authorization"].split(" ")[1];
-        const user = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-        // get all announcements created in a server
-        const serverId = req.body.serverId;
+        if (!token) {
+            return res.status(401).json({ error: "You must be logged in" });
+        }
 
-        const announcements = await Announcement.find({ createdBy: user.id });
-        res.json(announcements);
-    } catch (err) {
-        res.status(500).json({ message: err });
+        const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+        const userId = decoded.id;
+        const serverId = req.body.serverId; // Assuming serverId is in the request parameters
+
+        console.log(userId)
+        console.log(serverId)
+        // Check if the user is a member in the server
+        const isMember = await Membership.exists({
+            server: serverId,
+            member: userId,
+        });
+        console.log(isMember)
+
+        if (isMember) {
+            // User is a member and an admin, proceed to the next middleware or route
+            try {
+                const token = req.headers["authorization"].split(" ")[1];
+                const user = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+                // get all announcements created in a server
+            
+        
+                const announcements = await Announcement.find({ server: serverId });
+                res.json(announcements);
+            } catch (err) {
+                res.status(500).json({ message: err });
+            }
+        } 
+        else {
+            // User is not a member or not an admin, return forbidden status
+            return res.status(403).json({ message: "Forbidden, user not authorized" });
+        }
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Internal Server Error" });
     }
+
+    
 };
 
 // Update

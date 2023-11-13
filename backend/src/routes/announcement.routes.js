@@ -8,11 +8,11 @@ const {
 const recordRoutes = express.Router();
 
 // CRUD announcements routes
-// TODO: verify membership- admin only
+// verify membership- admin only
 recordRoutes
     .route("/announcements")
     .post(createAnnouncement)
-    .get(getAnnouncements); // TODO: Add pagination and verify membership
+    .get(getAnnouncements); // TODO: Add pagination Done: verify membership
 recordRoutes
     .route("/announcements/:id")
     .put(updateAnnouncement)
