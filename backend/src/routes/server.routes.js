@@ -8,26 +8,31 @@ const {
     deleteServer,
     getMyServers,
     updateMemberInServer,
-    removeMemberFromServer
+    removeMemberFromServer,
 } = require("../controllers/server.controller");
-const { checkUserRole } = require("../middleware/middleware");
+const { checkUserRole, extractToken } = require("../middleware/middleware");
+const e = require("express");
 
 const serverRoutes = express.Router();
 
 // Create a new server
 serverRoutes.post(
     "/createServer",
+    extractToken,
     [body("name").notEmpty().withMessage("Server name is required")],
     createServer
 );
 
 // Get all servers
-serverRoutes.route("/getAllServers").get(checkUserRole("admin"), getAllServers);
+serverRoutes
+    .route("/getAllServers")
+    .get(extractToken, checkUserRole("admin"), getAllServers);
 
 // Get servers of a user
 serverRoutes
     .route("/getMyServers")
     .get(
+        extractToken,
         [param("role").isIn(["admin", "user"]).withMessage("Invalid role")],
         getMyServers
     );
@@ -35,6 +40,8 @@ serverRoutes
 // Get a single server by ID
 serverRoutes.get(
     "/server/:serverId",
+    extractToken,
+    checkUserRole("admin"),
     [param("serverId").isMongoId().withMessage("Invalid server ID")],
     getServerById
 );
@@ -42,6 +49,7 @@ serverRoutes.get(
 // Update a server by ID
 serverRoutes.patch(
     "/server/:serverId",
+    extractToken,
     [
         param("serverId").isMongoId().withMessage("Invalid server ID"),
         body("name").notEmpty().withMessage("Server name is required"),
@@ -54,6 +62,7 @@ serverRoutes.patch(
 // remove admin from server
 serverRoutes.patch(
     "/server/:serverId/updateMember",
+    extractToken,
     [
         param("serverId").isMongoId().withMessage("Invalid server ID"),
         body("email").notEmpty().isEmail().withMessage("Invalid email format"),
@@ -65,6 +74,7 @@ serverRoutes.patch(
 // remove member from server
 serverRoutes.patch(
     "/server/:serverId/removeMember",
+    extractToken,
     [
         param("serverId").isMongoId().withMessage("Invalid server ID"),
         body("email").notEmpty().isEmail().withMessage("Invalid email format"),
@@ -77,6 +87,7 @@ serverRoutes.patch(
 // Delete a server by ID
 serverRoutes.delete(
     "/server/:serverId",
+    extractToken,
     [param("serverId").isMongoId().withMessage("Invalid server ID")],
     deleteServer
 );

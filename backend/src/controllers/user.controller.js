@@ -125,14 +125,7 @@ module.exports.getProfile = async (req, res) => {
     logEndPoint("GET", "/getProfile");
 
     try {
-        // Get the token from the header
-        const token = req.header("authorization").split(" ")[1];
-        if (!token) {
-            return res.status(401).json({ error: "You must be logged in" });
-        }
-        // Verify the token
-        const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-        console.log("decoded", decoded.id);
+        decoded = req.decoded;
         // Get the user from the decoded token
         // Send the user details excluding the password
         let user = await User.findById(decoded.id)
@@ -158,11 +151,7 @@ module.exports.updateUser = async (req, res) => {
     }
 
     try {
-        const token = req.header("authorization").split(" ")[1];
-        if (!token) {
-            return res.status(401).json({ error: "You must be logged in" });
-        }
-        const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+        decoded = req.decoded;
         let user = await User.findById(decoded.id);
         if (!user) {
             return res.status(400).json({ error: "User does not exist" });
@@ -195,14 +184,7 @@ module.exports.deleteUser = async (req, res) => {
     logEndPoint("DELETE", "/deleteUser");
 
     try {
-        // Get the token from the header
-        const token = req.header("authorization").split(" ")[1];
-        if (!token) {
-            return res.status(401).json({ error: "You must be logged in" });
-        }
-
-        // Verify the token
-        const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+        decoded = req.decoded;
 
         // Find the user by their ID
         const user = await User.findById(decoded.id);

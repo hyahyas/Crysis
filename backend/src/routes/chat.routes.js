@@ -7,6 +7,7 @@ const {
     updateMessage,
     deleteMessage,
 } = require("../controllers/chat.controller");
+const { extractToken } = require("../middleware/middleware");
 
 const chatRoutes = express.Router();
 
@@ -15,6 +16,7 @@ const chatRoutes = express.Router();
 chatRoutes
     .route("/sendMessage")
     .post(
+        extractToken,
         [
             body("body").notEmpty().withMessage("Message body is required"),
             body("serverId").isMongoId().withMessage("Invalid server ID"),
@@ -28,6 +30,7 @@ chatRoutes
 chatRoutes
     .route("/getHistory/:serverId")
     .get(
+        extractToken,
         [param("serverId").isMongoId().withMessage("Invalid server ID")],
         getAllMessages
     );

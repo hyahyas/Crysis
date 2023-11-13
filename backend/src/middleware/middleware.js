@@ -32,7 +32,6 @@ const checkUserRole = (requiredRole) => {
     };
 };
 
-
 //check user role inside gossip
 const { Membership } = require("../models/server.model");
 
@@ -65,7 +64,9 @@ const checkUserInServerAndAdmin = async (req, res, next) => {
             return res.status(200);
         } else {
             // User is not a member or not an admin, return forbidden status
-            return res.status(403).json({ message: "Forbidden, user not authorized" });
+            return res
+                .status(403)
+                .json({ message: "Forbidden, user not authorized" });
         }
     } catch (error) {
         console.error(error);
@@ -73,5 +74,23 @@ const checkUserInServerAndAdmin = async (req, res, next) => {
     }
 };
 
+const extractToken = (req, res, next) => {
+    let token;
+    try {
+        token = req.headers["authorization"].split(" ")[1];
+    } catch (error) {
+        console.error(error);
+        return res.status(401).json({ error: "You must be logged in" });
+    }
+    try {
+        const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+        req.decoded = decoded;
+        return next();
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Internal Server Error" });
+    }
+};
+
 module.exports = { checkUserInServerAndAdmin };
-module.exports = { checkUserRole };
+module.exports = { checkUserRole, extractToken };

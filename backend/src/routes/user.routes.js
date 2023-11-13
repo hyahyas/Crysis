@@ -9,7 +9,7 @@ const {
     deleteUser,
     refreshToken,
 } = require("../controllers/user.controller");
-const { checkUserRole } = require("../middleware/middleware");
+const { checkUserRole, extractToken } = require("../middleware/middleware");
 
 // recordRoutes is an instance of the express router.
 const recordRoutes = express.Router();
@@ -17,7 +17,7 @@ const recordRoutes = express.Router();
 // admin only api
 recordRoutes
     .route("/getAllUsers")
-    .get(checkUserRole("admin"), async (req, res) => {
+    .get(extractToken, checkUserRole("admin"), async (req, res) => {
         try {
             const users = await User.find({});
             res.json(users);
@@ -64,9 +64,10 @@ recordRoutes.route("/signIn").post(
 // refresh token api to generate new access token
 recordRoutes.route("/refreshToken").post(refreshToken);
 
-recordRoutes.route("/user").get(getProfile);
+recordRoutes.route("/user").get(extractToken, getProfile);
 
 recordRoutes.route("/user").patch(
+    extractToken,
     [
         // Validate name (optional)
         body("name").optional().notEmpty().withMessage("Name is required"),
@@ -83,6 +84,6 @@ recordRoutes.route("/user").patch(
     updateUser
 );
 
-recordRoutes.route("/user").delete(deleteUser);
+recordRoutes.route("/user").delete(extractToken, deleteUser);
 
 module.exports = recordRoutes;

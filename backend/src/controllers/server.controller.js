@@ -1,5 +1,5 @@
 const { Server, Membership } = require("../models/server.model");
-const {User} = require("../models/user.model")
+const { User } = require("../models/user.model");
 const { validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
 
@@ -25,10 +25,9 @@ exports.createServer = async (req, res) => {
 
     try {
         // Create a new server
-        const token = req.headers["authorization"].split(" ")[1];
-        const user = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+        const decoded = req.decoded;
         const { name, description } = req.body;
-        const ownerId = user.id;
+        const ownerId = decoded.id;
 
         // Make the owner an admin by default
         const server = new Server({
@@ -80,9 +79,8 @@ exports.getMyServers = async (req, res) => {
     logEndPoint("GET", "/getMyServers");
 
     try {
-        const token = req.headers["authorization"].split(" ")[1];
-        const user = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-        const userId = user.id;
+        const decoded = req.decoded;
+        const userId = decoded.id;
 
         // get role from query params and return those servers
         const role = req.query.role;
@@ -175,7 +173,6 @@ exports.deleteServer = async (req, res) => {
     }
 };
 
-
 // Controller to add a member to the server
 exports.updateMemberInServer = async (req, res) => {
     logEndPoint("PATCH", "/server/:serverId/updateMember");
@@ -200,7 +197,7 @@ exports.updateMemberInServer = async (req, res) => {
 
         // Find the user by email
         const { email, isAdmin } = req.body;
-        console.log(email)
+        console.log(email);
         const memberUser = await User.findOne({ email });
         //console.log(email)
         //console.log(memberUser)
@@ -214,19 +211,18 @@ exports.updateMemberInServer = async (req, res) => {
             server: serverId,
             member: memberUser._id,
         });
-        console.log(existingMembership)
+        console.log(existingMembership);
 
         if (!existingMembership) {
             const newMembership = new Membership({
                 server: serverId,
                 member: memberUser._id,
-                isAdmin: isAdmin || false, 
+                isAdmin: isAdmin || false,
             });
-            //create membership for server 
-            console.log(newMembership)
-            await newMembership.save()
-            }
-        
+            //create membership for server
+            console.log(newMembership);
+            await newMembership.save();
+        }
 
         // Update the isAdmin value if provided
         if (isAdmin !== undefined) {
@@ -244,7 +240,6 @@ exports.updateMemberInServer = async (req, res) => {
         handleError(res, err);
     }
 };
-
 
 // Controller to remove a member from the server
 exports.removeMemberFromServer = async (req, res) => {
@@ -284,12 +279,14 @@ exports.removeMemberFromServer = async (req, res) => {
         });
 
         if (!existingMembership) {
-            return res.status(404).json({ error: "User is not a member of the server" });
+            return res
+                .status(404)
+                .json({ error: "User is not a member of the server" });
         }
 
         // Remove the membership
-        console.log(existingMembership)
-        await Membership.findOneAndDelete(existingMembership)
+        console.log(existingMembership);
+        await Membership.findOneAndDelete(existingMembership);
 
         res.json({
             message: "Member removed from the server successfully",
@@ -299,4 +296,3 @@ exports.removeMemberFromServer = async (req, res) => {
         handleError(res, err);
     }
 };
-
