@@ -2,6 +2,7 @@ const { Server, Membership } = require("../models/server.model");
 const { User } = require("../models/user.model");
 const { validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
+const { checkUserInServer, checkUserIsAdmin } = require("../utils/util");
 
 // Define a centralized error handling function
 const handleError = (res, error) => {
@@ -87,7 +88,7 @@ exports.getMyServers = async (req, res) => {
 
         const memberships = await Membership.find({
             member: userId,
-        }).populate("server", "name");
+        }).populate("server", ["name", "description", "owner", "createdAt"]);
 
         const servers = memberships.map((membership) => membership.server);
 
@@ -132,20 +133,27 @@ exports.updateServer = async (req, res) => {
         const { name, description } = req.body;
         const serverId = req.params.serverId;
 
-        const updatedServer = await Server.findByIdAndUpdate(
-            serverId,
-            { name, description },
-            { new: true }
-        );
+        const isAdmin = await checkUserIsAdmin(serverId, req.decoded.id);
+        if (isAdmin) {
+            const updatedServer = await Server.findByIdAndUpdate(
+                serverId,
+                { name, description },
+                { new: true }
+            );
 
-        if (!updatedServer) {
-            return res.status(404).json({ error: "Server not found" });
+            if (!updatedServer) {
+                return res.status(404).json({ error: "Server not found" });
+            }
+
+            res.json({
+                message: "Server updated successfully",
+                server: updatedServer,
+            });
+        } else {
+            return res
+                .status(403)
+                .json({ message: "Forbidden, user not an admin" });
         }
-
-        res.json({
-            message: "Server updated successfully",
-            server: updatedServer,
-        });
     } catch (err) {
         handleError(res, err);
     }
@@ -158,16 +166,23 @@ exports.deleteServer = async (req, res) => {
     try {
         const serverId = req.params.serverId;
 
-        const deletedServer = await Server.findByIdAndDelete(serverId);
+        const isAdmin = await checkUserIsAdmin(serverId, req.decoded.id);
+        if (isAdmin) {
+            const deletedServer = await Server.findByIdAndDelete(serverId);
 
-        if (!deletedServer) {
-            return res.status(404).json({ error: "Server not found" });
+            if (!deletedServer) {
+                return res.status(404).json({ error: "Server not found" });
+            }
+
+            res.json({
+                message: "Server deleted successfully",
+                server: deletedServer,
+            });
+        } else {
+            return res
+                .status(403)
+                .json({ message: "Forbidden, user not an admin" });
         }
-
-        res.json({
-            message: "Server deleted successfully",
-            server: deletedServer,
-        });
     } catch (err) {
         handleError(res, err);
     }
@@ -184,10 +199,12 @@ exports.updateMemberInServer = async (req, res) => {
     }
 
     try {
-        const token = req.headers["authorization"].split(" ")[1];
-        const user = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-
+        const decoded = req.decoded;
+        const userId = decoded.id;
         const serverId = req.params.serverId;
+
+        // Check if the user is an admin
+        const isAdmin = await checkUserIsAdmin(serverId, userId);
 
         // Find the server
         const server = await Server.findById(serverId);
@@ -195,10 +212,16 @@ exports.updateMemberInServer = async (req, res) => {
             return res.status(404).json({ error: "Server not found" });
         }
 
+        if (!isAdmin) {
+            return res
+                .status(403)
+                .json({ message: "Forbidden, user not an admin" });
+        }
+
         // Find the user by email
-        const { email, isAdmin } = req.body;
+        const { email, admin } = req.body;
         console.log(email);
-        const memberUser = await User.findOne({ email });
+        const memberUser = await User.findOne({ email }).select("-password");
         //console.log(email)
         //console.log(memberUser)
         // If the user doesn't exist, return an error
@@ -207,7 +230,7 @@ exports.updateMemberInServer = async (req, res) => {
         }
 
         // Find the existing membership
-        const existingMembership = await Membership.findOne({
+        let existingMembership = await Membership.findOne({
             server: serverId,
             member: memberUser._id,
         });
@@ -217,16 +240,17 @@ exports.updateMemberInServer = async (req, res) => {
             const newMembership = new Membership({
                 server: serverId,
                 member: memberUser._id,
-                isAdmin: isAdmin || false,
+                isAdmin: admin || false,
             });
             //create membership for server
             console.log(newMembership);
             await newMembership.save();
+            existingMembership = newMembership;
         }
 
         // Update the isAdmin value if provided
-        if (isAdmin !== undefined) {
-            existingMembership.isAdmin = isAdmin;
+        if (admin !== undefined) {
+            existingMembership.isAdmin = admin;
         }
 
         await existingMembership.save();
@@ -252,8 +276,8 @@ exports.removeMemberFromServer = async (req, res) => {
     }
 
     try {
-        const token = req.headers["authorization"].split(" ")[1];
-        const user = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+        const decoded = req.decoded;
+        const userId = decoded.id;
 
         const serverId = req.params.serverId;
 
@@ -263,13 +287,21 @@ exports.removeMemberFromServer = async (req, res) => {
             return res.status(404).json({ error: "Server not found" });
         }
 
+        // Check if the user is an admin
+        const isAdmin = await checkUserIsAdmin(serverId, userId);
+        if (!isAdmin) {
+            return res
+                .status(403)
+                .json({ message: "Forbidden, user not an admin" });
+        }
+
         // Find the user by email
         const { email } = req.body;
-        const memberUser = await User.findOne({ email });
+        const memberUser = await User.findOne({ email }).select("-password");
 
         // If the user doesn't exist, return an error
         if (!memberUser) {
-            return res.status(404).json({ error: "User not found" });
+            return res.status(404).json({ error: "User to remove not found" });
         }
 
         // Find the existing membership
@@ -279,9 +311,9 @@ exports.removeMemberFromServer = async (req, res) => {
         });
 
         if (!existingMembership) {
-            return res
-                .status(404)
-                .json({ error: "User is not a member of the server" });
+            return res.status(404).json({
+                error: "User to remove is not a member of the server",
+            });
         }
 
         // Remove the membership
