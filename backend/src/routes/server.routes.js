@@ -50,6 +50,8 @@ serverRoutes.patch(
 );
 
 // add member to server
+// add admin to server/ promote member to admin
+// remove admin from server
 serverRoutes.patch(
     "/server/:serverId/updateMember",
     [
@@ -71,10 +73,6 @@ serverRoutes.patch(
 );
 
 // server admin restrictions
-// add admin to server/ promote member to admin
-
-// remove admin from server
-
 // server admin restrictions
 // Delete a server by ID
 serverRoutes.delete(
