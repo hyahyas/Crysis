@@ -7,6 +7,8 @@ const {
     updateServer,
     deleteServer,
     getMyServers,
+    updateMemberInServer,
+    removeMemberFromServer
 } = require("../controllers/server.controller");
 const { checkUserRole } = require("../middleware/middleware");
 
@@ -48,8 +50,25 @@ serverRoutes.patch(
 );
 
 // add member to server
+serverRoutes.patch(
+    "/server/:serverId/updateMember",
+    [
+        param("serverId").isMongoId().withMessage("Invalid server ID"),
+        body("email").notEmpty().isEmail().withMessage("Invalid email format"),
+        body("isAdmin").isBoolean().optional(),
+    ],
+    updateMemberInServer
+);
 
 // remove member from server
+serverRoutes.patch(
+    "/server/:serverId/removeMember",
+    [
+        param("serverId").isMongoId().withMessage("Invalid server ID"),
+        body("email").notEmpty().isEmail().withMessage("Invalid email format"),
+    ],
+    removeMemberFromServer
+);
 
 // server admin restrictions
 // add admin to server/ promote member to admin

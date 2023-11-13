@@ -1,4 +1,5 @@
 const { Server, Membership } = require("../models/server.model");
+const {User} = require("../models/user.model")
 const { validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
 
@@ -173,3 +174,129 @@ exports.deleteServer = async (req, res) => {
         handleError(res, err);
     }
 };
+
+
+// Controller to add a member to the server
+exports.updateMemberInServer = async (req, res) => {
+    logEndPoint("PATCH", "/server/:serverId/updateMember");
+
+    // Check for validation errors
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
+    try {
+        const token = req.headers["authorization"].split(" ")[1];
+        const user = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+
+        const serverId = req.params.serverId;
+
+        // Find the server
+        const server = await Server.findById(serverId);
+        if (!server) {
+            return res.status(404).json({ error: "Server not found" });
+        }
+
+        // Find the user by email
+        const { email, isAdmin } = req.body;
+        console.log(email)
+        const memberUser = await User.findOne({ email });
+        //console.log(email)
+        //console.log(memberUser)
+        // If the user doesn't exist, return an error
+        if (!memberUser) {
+            return res.status(404).json({ error: "User not found" });
+        }
+
+        // Find the existing membership
+        const existingMembership = await Membership.findOne({
+            server: serverId,
+            member: memberUser._id,
+        });
+        console.log(existingMembership)
+
+        if (!existingMembership) {
+            const newMembership = new Membership({
+                server: serverId,
+                member: memberUser._id,
+                isAdmin: isAdmin || false, 
+            });
+            //create membership for server 
+            console.log(newMembership)
+            await newMembership.save()
+            }
+        
+
+        // Update the isAdmin value if provided
+        if (isAdmin !== undefined) {
+            existingMembership.isAdmin = isAdmin;
+        }
+
+        await existingMembership.save();
+
+        res.json({
+            message: "Member information updated in the server successfully",
+            member: memberUser,
+            isAdmin: existingMembership.isAdmin,
+        });
+    } catch (err) {
+        handleError(res, err);
+    }
+};
+
+
+// Controller to remove a member from the server
+exports.removeMemberFromServer = async (req, res) => {
+    logEndPoint("PATCH", "/server/:serverId/removeMember");
+
+    // Check for validation errors
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
+    try {
+        const token = req.headers["authorization"].split(" ")[1];
+        const user = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+
+        const serverId = req.params.serverId;
+
+        // Find the server
+        const server = await Server.findById(serverId);
+        if (!server) {
+            return res.status(404).json({ error: "Server not found" });
+        }
+
+        // Find the user by email
+        const { email } = req.body;
+        const memberUser = await User.findOne({ email });
+
+        // If the user doesn't exist, return an error
+        if (!memberUser) {
+            return res.status(404).json({ error: "User not found" });
+        }
+
+        // Find the existing membership
+        const existingMembership = await Membership.findOne({
+            server: serverId,
+            member: memberUser._id,
+        });
+
+        if (!existingMembership) {
+            return res.status(404).json({ error: "User is not a member of the server" });
+        }
+
+        // Remove the membership
+        console.log(existingMembership)
+        await Membership.findOneAndDelete(existingMembership)
+
+        res.json({
+            message: "Member removed from the server successfully",
+            member: memberUser,
+        });
+    } catch (err) {
+        handleError(res, err);
+    }
+};
+
