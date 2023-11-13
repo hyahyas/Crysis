@@ -49,6 +49,7 @@ ticketRoutes.patch(
 );
 
 // Delete a ticket by ID
+// TODO: verify membership- admin only
 ticketRoutes.delete(
     "/ticket/:ticketId",
     [param("ticketId").isMongoId().withMessage("Invalid ticket ID")],
@@ -56,7 +57,7 @@ ticketRoutes.delete(
 );
 
 // Change ticket status
-// TODO: verify membership- assignee only
+// TODO: verify membership- assignee or admin only
 ticketRoutes.put("/changeTicketStatus", changeTicketStatus);
 
 // Get tickets by assignee
