@@ -38,14 +38,24 @@
     justify-content: flex-end;
 }
 .userlogin button{
-    align-items: flex-end;
+    all: unset;
+    align-items: center;
+    background-color: #5865f2;
+    border-radius: 3px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
     padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    outline: none;
-    background-color: transparent;
-    cursor: pointer;
+    position: absolute;
     width: 20%;
-    color: #fff;
-    font-family: 'Gill Sans', 'Gill Sans MT', 'Calibri', 'Trebuchet MS', sans-serif;
   }
+.links {
+    margin-top: 50px;
+}
+.link {
+    all: unset;
+    color: #00a8fc;
+    text-decoration: underline;
+    cursor: pointer;
+    margin-top: 10px; /* Add margin to separate the buttons */
+}

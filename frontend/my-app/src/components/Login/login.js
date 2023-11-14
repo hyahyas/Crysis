@@ -8,10 +8,12 @@ const Login = () => {
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
 
+    const baseURL = "http://localhost:5000";
+
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post("http://localhost:5000/signIn/", {
+            const response = await axios.post(`${baseURL}/signIn`, {
                 email,
                 password,
             });
@@ -36,12 +38,15 @@ const Login = () => {
         navigate("/signup");
     };
 
+    const goToForgotPassword = () => {
+        navigate("/forgotpassword");
+    };
+
     return (
         <>
             <div className="container">
                 <div className="Left">
                     <h5>Welcome to Crysis</h5>
-                    {/* <br /> */}
                     <p>Got a crisis? Get Crysis</p>
                 </div>
 
@@ -65,8 +70,16 @@ const Login = () => {
                             <button type="submit">Login</button>
                         </div>
                     </form>
-                    {/* need to beautify this looks ugly */}
-                    <a onClick={goToSignUp}>Dont have an account? Sign Up</a>
+                    {/* forgot password page and sign up page redirect buttons */}
+                    <div className="links">
+                        <button className="link" onClick={goToForgotPassword}>
+                            Forgot Password?
+                        </button>
+                        <br />
+                        <button className="link" onClick={goToSignUp}>
+                            Sign Up
+                        </button>
+                    </div>
                 </div>
             </div>
         </>
