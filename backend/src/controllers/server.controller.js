@@ -1,18 +1,7 @@
 const { Server, Membership } = require("../models/server.model");
 const { User } = require("../models/user.model");
 const { validationResult } = require("express-validator");
-const jwt = require("jsonwebtoken");
-const { checkUserInServer, checkUserIsAdmin } = require("../utils/util");
-
-// Define a centralized error handling function
-const handleError = (res, error) => {
-    console.error(error);
-    res.status(500).json({ error: "Internal server error" });
-};
-
-const logEndPoint = (type, url) => {
-    console.log(new Date().toLocaleString(), "--->", type, " ", url);
-};
+const { logEndPoint, checkUserIsAdmin, handleError } = require("../utils/util");
 
 // Controller to create a new server
 exports.createServer = async (req, res) => {

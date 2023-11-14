@@ -19,7 +19,19 @@ const checkUserIsAdmin = async (serverId, userId) => {
     return isAdmin;
 };
 
+// Centralized error handling middleware
+const handleError = (res, error) => {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
+};
+
+const logEndPoint = (type, url) => {
+    console.log(new Date().toLocaleString(), "--->", type, " ", url);
+};
+
 module.exports = {
     checkUserInServer,
     checkUserIsAdmin,
+    handleError,
+    logEndPoint,
 };

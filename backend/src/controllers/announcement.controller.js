@@ -1,9 +1,9 @@
 const Announcement = require("../models/announcement.model");
-const { checkUserInServer, checkUserIsAdmin } = require("../utils/util");
-
-const logEndPoint = (type, url) => {
-    console.log(new Date().toLocaleString(), "--->", type, " ", url);
-};
+const {
+    checkUserInServer,
+    checkUserIsAdmin,
+    logEndPoint,
+} = require("../utils/util");
 
 // Create
 exports.createAnnouncement = async (req, res) => {

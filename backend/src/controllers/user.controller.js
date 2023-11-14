@@ -2,16 +2,7 @@ const { User, Role } = require("../models/user.model");
 const bcrypt = require("bcryptjs");
 const { validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
-
-// Centralized error handling middleware
-const handleError = (res, error) => {
-    console.error(error);
-    res.status(500).json({ error: "Internal server error" });
-};
-
-const logEndPoint = (type, url) => {
-    console.log(new Date().toLocaleString(), "--->", type, " ", url);
-};
+const { handleError, logEndPoint } = require("../utils/util");
 
 // Controller for user sign-up
 exports.signUp = async (req, res) => {

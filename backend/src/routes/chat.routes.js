@@ -39,6 +39,7 @@ chatRoutes
 chatRoutes
     .route("/message/:messageId")
     .get(
+        extractToken,
         [param("messageId").isMongoId().withMessage("Invalid message ID")],
         getMessageById
     );
@@ -47,6 +48,7 @@ chatRoutes
 chatRoutes
     .route("/message/:messageId")
     .patch(
+        extractToken,
         [
             param("messageId").isMongoId().withMessage("Invalid message ID"),
             body("body").notEmpty().withMessage("Message body is required"),
@@ -58,6 +60,7 @@ chatRoutes
 chatRoutes
     .route("/message/:messageId")
     .delete(
+        extractToken,
         [param("messageId").isMongoId().withMessage("Invalid message ID")],
         deleteMessage
     );

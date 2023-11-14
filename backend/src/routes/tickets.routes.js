@@ -21,7 +21,11 @@ ticketRoutes.post(
     extractToken,
     [
         body("title").notEmpty().withMessage("Ticket title is required"),
-        // Add more validation as needed
+        body("status")
+            .notEmpty()
+            .withMessage("Ticket status is required")
+            .isIn(["To Do", "In Progress", "Done", "Abandoned"])
+            .withMessage("Invalid ticket status"),
     ],
     createTicket
 );

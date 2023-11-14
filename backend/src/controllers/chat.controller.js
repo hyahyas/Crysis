@@ -1,16 +1,11 @@
 const Chat = require("../models/chat.model");
 const { validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
-
-// Centralized error handling middleware
-const handleError = (res, error) => {
-    console.error(error);
-    res.status(500).json({ error: "Internal server error" });
-};
-
-const logEndPoint = (type, url) => {
-    console.log(new Date().toLocaleString(), "--->", type, " ", url);
-};
+const {
+    checkUserInServer,
+    logEndPoint,
+    handleError,
+} = require("../utils/util");
 
 // Send a message
 exports.sendMessage = async (req, res) => {
@@ -22,9 +17,17 @@ exports.sendMessage = async (req, res) => {
     }
 
     try {
-        const decoded = req.decoded;
         const { body, serverId } = req.body;
+        const decoded = req.decoded;
         const senderId = decoded.id;
+
+        // Check if the user is a member in the server
+        const isMember = await checkUserInServer(serverId, senderId);
+        if (!isMember) {
+            return res
+                .status(403)
+                .json({ message: "You are not a member in this server" });
+        }
 
         const chat = new Chat({
             body,
@@ -46,6 +49,16 @@ exports.getAllMessages = async (req, res) => {
 
     try {
         const serverId = req.params.serverId;
+        const decoded = req.decoded;
+        const userId = decoded.id;
+
+        // Check if the user is a member in the server
+        const isMember = await checkUserInServer(serverId, userId);
+        if (!isMember) {
+            return res
+                .status(403)
+                .json({ message: "You are not a member in this server" });
+        }
 
         const chats = await Chat.find({ server: serverId })
             .populate("server", "name")
@@ -59,12 +72,26 @@ exports.getAllMessages = async (req, res) => {
 
 // Get a single message by ID
 exports.getMessageById = async (req, res) => {
-    logEndPoint("GET", "/getMessage/:messageId");
+    logEndPoint("GET", "/message/:messageId");
 
     try {
-        const token = req.headers["authorization"].split(" ")[1];
-        const user = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
         const messageId = req.params.messageId;
+        const decoded = req.decoded;
+        const userId = decoded.id;
+
+        const message = await Chat.findById(messageId);
+        if (!message) {
+            return res.status(404).json({ message: "Message not found" });
+        }
+        const serverId = message.server;
+
+        // Check if the user is a member in the server
+        const isMember = await checkUserInServer(serverId, userId);
+        if (!isMember) {
+            return res
+                .status(403)
+                .json({ message: "You are not a member in this server" });
+        }
 
         const chat = await Chat.findById(messageId).populate("sender", "name");
 
@@ -76,20 +103,34 @@ exports.getMessageById = async (req, res) => {
 
 // Update a message by ID
 exports.updateMessage = async (req, res) => {
-    logEndPoint("PATCH", "/updateMessage/:messageId");
+    logEndPoint("PATCH", "/message/:messageId");
 
     try {
-        const token = req.headers["authorization"].split(" ")[1];
-        const user = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
         const messageId = req.params.messageId;
         const { body } = req.body;
+        const decoded = req.decoded;
+        const userId = decoded.id;
+
+        const message = await Chat.findById(messageId);
+        if (!message) {
+            return res.status(404).json({ message: "Message not found" });
+        }
+        const serverId = message.server;
+
+        // Check if the user is a member in the server
+        const isMember = await checkUserInServer(serverId, userId);
+        if (!isMember) {
+            return res
+                .status(403)
+                .json({ message: "You are not a member in this server" });
+        }
 
         const originalMessage = await Chat.findById(messageId);
         if (!originalMessage) {
             return res.status(404).json({ message: "Message not found" });
         }
         // Check if the user is the sender of the message
-        if (originalMessage.sender != user.id) {
+        if (originalMessage.sender != userId) {
             return res
                 .status(403)
                 .json({ message: "Cannot update other people's messages" });
@@ -114,12 +155,26 @@ exports.updateMessage = async (req, res) => {
 
 // Delete a message by ID
 exports.deleteMessage = async (req, res) => {
-    logEndPoint("DELETE", "/deleteMessage/:messageId");
+    logEndPoint("DELETE", "/message/:messageId");
 
     try {
-        const token = req.headers["authorization"].split(" ")[1];
-        const user = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+        const decoded = req.decoded;
+        const userId = decoded.id;
         const messageId = req.params.messageId;
+
+        const message = await Chat.findById(messageId);
+        if (!message) {
+            return res.status(404).json({ message: "Message not found" });
+        }
+        const serverId = message.server;
+
+        // Check if the user is a member in the server
+        const isMember = await checkUserInServer(serverId, userId);
+        if (!isMember) {
+            return res
+                .status(403)
+                .json({ message: "You are not a member in this server" });
+        }
 
         const chat = await Chat.findById(messageId);
         // Check if the message exists
@@ -127,7 +182,7 @@ exports.deleteMessage = async (req, res) => {
             return res.status(404).json({ message: "Message not found" });
         }
         // Check if the user is the sender of the message
-        if (chat.sender != user.id) {
+        if (chat.sender != userId) {
             return res
                 .status(403)
                 .json({ message: "Cannot delete other people's messages" });

@@ -1,5 +1,5 @@
 const express = require("express");
-const { body, param, check } = require("express-validator");
+const { body, param } = require("express-validator");
 const {
     createServer,
     getAllServers,
