@@ -75,9 +75,38 @@ exports.getMyServers = async (req, res) => {
         // get role from query params and return those servers
         const role = req.query.role;
 
-        const memberships = await Membership.find({
-            member: userId,
-        }).populate("server", ["name", "description", "owner", "createdAt"]);
+        let memberships;
+
+        if (role === "admin") {
+            memberships = await Membership.find({
+                member: userId,
+                isAdmin: true,
+            }).populate("server", [
+                "name",
+                "description",
+                "owner",
+                "createdAt",
+            ]);
+        } else if (role === "user") {
+            memberships = await Membership.find({
+                member: userId,
+                isAdmin: false,
+            }).populate("server", [
+                "name",
+                "description",
+                "owner",
+                "createdAt",
+            ]);
+        } else {
+            memberships = await Membership.find({
+                member: userId,
+            }).populate("server", [
+                "name",
+                "description",
+                "owner",
+                "createdAt",
+            ]);
+        }
 
         const servers = memberships.map((membership) => membership.server);
 

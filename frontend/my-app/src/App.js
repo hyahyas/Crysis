@@ -6,6 +6,7 @@ import Home from "./components/Home/Home";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import SignUp from "./components/SignUp/signup";
 import Test from "./components/Test/Test";
+import CreateTeam from "./components/CreateTeam/createTeam";
 
 function App() {
     return (
@@ -18,6 +19,7 @@ function App() {
                             <Route path="/home" element={<Home />} />
                             <Route path="/signup" element={<SignUp />} />
                             <Route path="/test" element={<Test />} />
+                            <Route path="/newteam" element={<CreateTeam />} />
                         </Routes>
                     </BrowserRouter>
                 </div>
