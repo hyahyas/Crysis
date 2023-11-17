@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+/* 
 .App {
   text-align: center;
 }
@@ -14,7 +18,7 @@
 }
 
 .App-header {
-  background-color: #313338;
+  background-color: #ffffff;
   height: 100vh;
   display: flex;
   flex-direction: column;
@@ -34,4 +38,4 @@
   to {
     transform: rotate(360deg);
   }
-}
+} */
