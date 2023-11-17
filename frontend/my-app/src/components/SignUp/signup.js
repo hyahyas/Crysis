@@ -106,11 +106,11 @@ const Signup = () => {
         <div className="flex min-h-screen">
             {/* Left Container with Logo */}
             <div className="hidden lg:flex flex-col items-center justify-center flex-1 bg-indigo-600 text-white">
-                <img
-                    className="h-32 w-32 mb-4"
-                    src={logo}
-                    alt="Crysis Logo"
-                />
+                    <img
+                        className="h-[20%] w-[20%] mb-4"
+                        src={logo}
+                        alt="Crises"
+                    />
                 <h5 className="text-2xl font-bold mb-4">Welcome to Crysis</h5>
                 <p>Got a crisis? Get Crysis</p>
             </div>
