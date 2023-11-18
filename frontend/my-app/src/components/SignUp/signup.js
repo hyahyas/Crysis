@@ -112,7 +112,9 @@ const Signup = () => {
                         alt="Crises"
                     />
                 <h5 className="text-2xl font-bold mb-4">Welcome to Crysis</h5>
-                <p>Got a crisis? Get Crysis</p>
+                <p>1. Enter your details</p>
+                <p>2. Create an account</p>
+                <p>3.Handle crisis like never before!</p>
             </div>
 
             {/* Right Container */}
