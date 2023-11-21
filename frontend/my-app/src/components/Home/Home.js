@@ -99,11 +99,12 @@
 
 // export default Home;
 
+
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSun, faMoon } from "@fortawesome/free-solid-svg-icons";
+import { faSun, faMoon, faEnvelope, faBullhorn, faTicketAlt } from "@fortawesome/free-solid-svg-icons";
 
 const Home = () => {
     const navigate = useNavigate();
@@ -152,6 +153,10 @@ const Home = () => {
         navigate("/newteam");
     };
 
+    const handleTicketPage = () => {
+        navigate("/tickets");
+    };
+
     const toggleDarkMode = () => {
         setDarkMode(!darkMode);
     };
@@ -181,9 +186,20 @@ const Home = () => {
                     <h5 className={`text-lg font-bold ${darkMode ? 'text-white' : 'text-black'}`}>Your Servers (Admin)</h5>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                         {teamsAdmin.map((team) => (
-                            <div key={team.id} className={`bg-white p-4 rounded-md shadow-md ${darkMode ? 'dark:bg-gray-700' : ''}`}>
+                            <div key={team.id} className={`bg-white p-4 rounded-md shadow-md ${darkMode ? 'dark:bg-gray-700' : ''} h-full`}>
                                 <p className={`font-semibold ${darkMode ? 'text-white' : 'text-black'}`}>{team.name}</p>
-                                <button className={`mt-2 bg-indigo-500 px-3 py-1.5 text-white rounded-md ${darkMode ? 'dark:bg-gray-600' : ''}`}>View</button>
+                                <p className={`text-gray-500 mt-2 ${darkMode ? 'text-white' : 'text-black'}`}>{team.description}</p>
+                                <div className="mt-4 flex justify-between">
+                                    <button className={`bg-indigo-500 px-3 py-1.5 text-white rounded-md ${darkMode ? 'dark:bg-gray-600' : ''}`}>
+                                        <FontAwesomeIcon icon={faEnvelope} />
+                                    </button>
+                                    <button className={`bg-indigo-500 px-3 py-1.5 text-white rounded-md ${darkMode ? 'dark:bg-gray-600' : ''}`}>
+                                        <FontAwesomeIcon icon={faBullhorn} />
+                                    </button>
+                                    <button onClick={handleTicketPage} className={`bg-indigo-500 px-3 py-1.5 text-white rounded-md ${darkMode ? 'dark:bg-gray-600' : ''}`}>
+                                        <FontAwesomeIcon icon={faTicketAlt} />
+                                    </button>
+                                </div>
                             </div>
                         ))}
                     </div>
@@ -194,9 +210,20 @@ const Home = () => {
                     <h5 className={`text-lg font-bold ${darkMode ? 'text-white' : 'text-black'}`}>Joined Servers (Member)</h5>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                         {teamsMember.map((team) => (
-                            <div key={team.id} className={`bg-white p-4 rounded-md shadow-md ${darkMode ? 'dark:bg-gray-700' : ''}`}>
+                            <div key={team.id} className={`bg-white p-4 rounded-md shadow-md ${darkMode ? 'dark:bg-gray-700' : ''} h-full`}>
                                 <p className={`font-semibold ${darkMode ? 'text-white' : 'text-black'}`}>{team.name}</p>
-                                <button className={`mt-2 bg-indigo-500 px-3 py-1.5 text-white rounded-md ${darkMode ? 'dark:bg-gray-600' : ''}`}>View</button>
+                                <p className={`text-gray-500 mt-2 ${darkMode ? 'text-white' : 'text-black'}`}>{team.description}</p>
+                                <div className="mt-4 flex justify-between">
+                                    <button className={`bg-indigo-500 px-3 py-1.5 text-white rounded-md ${darkMode ? 'dark:bg-gray-600' : ''}`}>
+                                        <FontAwesomeIcon icon={faEnvelope} />
+                                    </button>
+                                    <button className={`bg-indigo-500 px-3 py-1.5 text-white rounded-md ${darkMode ? 'dark:bg-gray-600' : ''}`}>
+                                        <FontAwesomeIcon icon={faBullhorn} />
+                                    </button>
+                                    <button onClick={handleTicketPage} className={`bg-indigo-500 px-3 py-1.5 text-white rounded-md ${darkMode ? 'dark:bg-gray-600' : ''}`}>
+                                        <FontAwesomeIcon icon={faTicketAlt} />
+                                    </button>
+                                </div>
                             </div>
                         ))}
                     </div>

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "bootstrap/dist/css/bootstrap.css";
+//import "bootstrap/dist/css/bootstrap.css";
 import "./App.css";
 import Login from "./components/Login/login";
 import Login2 from "./components/Login/login2"
@@ -8,6 +8,9 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import SignUp from "./components/SignUp/signup";
 import Test from "./components/Test/Test";
 import CreateTeam from "./components/CreateTeam/createTeam";
+import ServerTickets from "./components/ServerTickets/tickets";
+import CreateTickets from "./components/CreateTickets/createtickets"
+import ServerAnnouncements from "./components/ServerAnnouncements/announcements"
 
 function App() {
     return (
@@ -22,6 +25,9 @@ function App() {
                             <Route path="/signup" element={<SignUp />} />
                             <Route path="/test" element={<Test />} />
                             <Route path="/newteam" element={<CreateTeam />} />
+                            <Route path="/tickets" element={<ServerTickets />} />
+                            <Route path="/announcements" element={<ServerAnnouncements />} />
+                            <Route path="/createticket" element={<CreateTickets />} />
                         </Routes>
                     </BrowserRouter>
                 </div>

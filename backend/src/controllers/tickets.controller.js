@@ -79,22 +79,6 @@ exports.getAllTickets = async (req, res) => {
     }
 };
 
-// // Get a single ticket by ID
-// exports.getTicketById = async (req, res) => {
-//     logEndPoint("GET", "/getTicket/:ticketId");
-
-//     try {
-//         const ticket = await Ticket.findById(req.params.ticketId);
-
-//         if (!ticket) {
-//             return res.status(404).json({ error: "Ticket not found" });
-//         }
-
-//         res.json(ticket);
-//     } catch (err) {
-//         handleError(res, err);
-//     }
-// };
 
 // Update a ticket by ID
 exports.updateTicket = async (req, res) => {

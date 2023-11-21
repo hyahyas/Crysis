@@ -15,7 +15,6 @@ const { extractToken } = require("../middleware/middleware");
 const ticketRoutes = express.Router();
 
 // Create a new ticket
-// TODO: verify membership- admin only
 ticketRoutes.post(
     "/createTicket",
     extractToken,
@@ -31,8 +30,6 @@ ticketRoutes.post(
 );
 
 // Get all tickets for the user's current server
-// TODO: Add pagination
-// TODO: verify membership
 ticketRoutes.get(
     "/getAllTickets/:serverId",
     extractToken,
@@ -40,28 +37,19 @@ ticketRoutes.get(
     getAllTickets
 );
 
-// Get a single ticket by ID
-// ticketRoutes.get(
-//     "/ticket/:ticketId",
-//     [param("ticketId").isMongoId().withMessage("Invalid ticket ID")],
-//     getTicketById
-// );
 
 // Update a ticket by ID
-// TODO: verify membership- admin only
 ticketRoutes.patch(
     "/ticket/:ticketId",
     extractToken,
     [
         param("ticketId").isMongoId().withMessage("Invalid ticket ID"),
         body("title").notEmpty().withMessage("Ticket title is required"),
-        // Add more validation as needed
     ],
     updateTicket
 );
 
 // Delete a ticket by ID
-// TODO: verify membership- admin only
 ticketRoutes.delete(
     "/ticket/:ticketId",
     extractToken,
@@ -70,7 +58,6 @@ ticketRoutes.delete(
 );
 
 // Change ticket status
-// TODO: verify membership- assignee or admin only
 ticketRoutes.put("/changeTicketStatus", extractToken, changeTicketStatus);
 
 // Get tickets by assignee
