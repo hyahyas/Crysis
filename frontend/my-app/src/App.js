@@ -11,6 +11,8 @@ import CreateTeam from "./components/CreateTeam/createTeam";
 import ServerTickets from "./components/ServerTickets/tickets";
 import CreateTickets from "./components/CreateTickets/createtickets"
 import ServerAnnouncements from "./components/ServerAnnouncements/announcements"
+import SeverChat from "./components/ServerChat/chat"
+
 
 function App() {
     return (
@@ -26,6 +28,7 @@ function App() {
                             <Route path="/test" element={<Test />} />
                             <Route path="/newteam" element={<CreateTeam />} />
                             <Route path="/tickets" element={<ServerTickets />} />
+                            <Route path="/chat" element={<SeverChat />} />
                             <Route path="/announcements" element={<ServerAnnouncements />} />
                             <Route path="/createticket" element={<CreateTickets />} />
                         </Routes>

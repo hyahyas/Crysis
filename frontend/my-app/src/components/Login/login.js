@@ -274,31 +274,28 @@ const Login = () => {
     const toggleDarkMode = () => {
         setDarkMode(!darkMode);
     };
+    
 
     return (
         <>
-            <div className={`flex min-h-screen`}>
-                {/* Left Container */}
-                <div className={`hidden lg:flex flex-col items-center justify-center flex-1 bg-indigo-600 text-white`}>
-                    <img
-                        className="h-[20%] w-[20%] mb-4"
-                        src={logo}
-                        alt="Crises"
-                    />
-                    <h5 className="text-2xl font-bold mb-4">Welcome to Crysis</h5>
-                    <p>Got a crisis? Get Crysis</p>
-                </div>
+            <div className={`flex min-h-screen ${darkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'}`}>
+                    {/* Left Container */}
+                <div className={`hidden lg:flex flex-col items-center justify-center flex-1 ${darkMode ? 'bg-indigo-600' : 'bg-gray-800'} text-white`}>
+                    <img className="h-[20%] w-[20%] mb-4" src={logo} alt="Crises" />
+                    <h5 className="text-2xl font-bold mb-4">Welcome to Crysis!</h5>
+                    <p>Got a crisis? Get Crysis!</p>
+                    </div>
 
-                {/* Right Container */}
-                <div className={`flex-1 flex flex-col items-center justify-center p-6 sm:p-10 ${darkMode ? 'bg-gray-800' : 'bg-white'} shadow-md rounded-md`}>
+                    {/* Right Container */}
+                    <div className={`flex-1 flex flex-col items-center justify-center p-6 sm:p-10 ${darkMode ? 'bg-gray-800' : 'bg-white'} shadow-md rounded-md`}>
                     <div className="absolute left-4 bottom-4">
                         <button
-                            onClick={toggleDarkMode}
-                            className="p-2 rounded-full bg-indigo-500 hover:bg-indigo-400 focus:outline-none focus:ring focus:border-indigo-300"
+                        onClick={toggleDarkMode}
+                        className={`p-2 rounded-full ${darkMode ? 'bg-indigo-500' : 'bg-white'} hover:bg-indigo-400 focus:outline-none focus:ring focus:border-indigo-300`}
                         >
-                            <FontAwesomeIcon icon={faAdjust} className="text-white" />
+                        <FontAwesomeIcon icon={faAdjust} className={darkMode ? "text-white" : "text-gray-800"} />
                         </button>
-                    </div>
+                </div>
 
                     <div className="sm:mx-auto sm:w-full sm:max-w-sm">
                         <h2 className={`text-2xl font-bold leading-9 ${darkMode ? 'text-white' : 'text-gray-900'} mb-8`}>
@@ -375,3 +372,5 @@ const Login = () => {
 };
 
 export default Login;
+
+
