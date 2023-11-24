@@ -196,6 +196,11 @@ const Tickets = () => {
                         contentLabel="Create Ticket Modal"
                     >
                         {/* ... (TicketForm component) */}
+                        <TicketForm
+                            closeModal={closeModal}
+                            handleCreateTicket={handleCreateTicket}
+                            serverId={params.id}
+                        />
                     </Modal>
                 </div>
             </div>

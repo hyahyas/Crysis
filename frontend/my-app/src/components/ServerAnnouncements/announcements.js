@@ -136,6 +136,15 @@ const Announcements = () => {
                             </button>
                         ))}
                     </div>
+
+                    {/* Announcement Creation Modal */}
+                    {/* <Modal
+                        isOpen={modalIsOpen}
+                        onRequestClose={closeModal}
+                        contentLabel="Create Announcement Modal"
+                    >
+                        <AnnouncementForm></AnnouncementForm>
+                    </Modal> */}
                 </div>
             </div>
         </div>

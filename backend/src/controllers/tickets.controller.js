@@ -18,8 +18,10 @@ exports.createTicket = async (req, res) => {
 
     try {
         const decoded = req.decoded;
-        const { title, description, status, assigneeId, serverId } = req.body;
+        const { title, description, status, serverId } = req.body;
+        const assigneeId = decoded.id;
         const reporterId = decoded.id;
+        console.log("every thing", reporterId, assigneeId, serverId)
 
         // Ensure the ticket is created in the by admin of server
         const isAdmin = await checkUserIsAdmin(serverId, reporterId);
