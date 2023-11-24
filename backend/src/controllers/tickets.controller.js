@@ -71,7 +71,7 @@ exports.getAllTickets = async (req, res) => {
                 .json({ message: "You are not a admin in this server" });
         }
 
-        const tickets = await Ticket.find({ server: queryServerId });
+        const tickets = await Ticket.find({ server: queryServerId }).populate("assignee reporter", "name email").sort({ updatedAt: -1 });
 
         res.json(tickets);
     } catch (err) {

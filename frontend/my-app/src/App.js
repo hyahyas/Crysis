@@ -27,9 +27,9 @@ function App() {
                             <Route path="/signup" element={<SignUp />} />
                             <Route path="/test" element={<Test />} />
                             <Route path="/newteam" element={<CreateTeam />} />
-                            <Route path="/tickets" element={<ServerTickets />} />
+                            <Route path="/tickets/:id" element={<ServerTickets />} />
                             <Route path="/chat" element={<SeverChat />} />
-                            <Route path="/announcements" element={<ServerAnnouncements />} />
+                            <Route path="/announcements/:id" element={<ServerAnnouncements />} />
                             <Route path="/createticket" element={<CreateTickets />} />
                         </Routes>
                     </BrowserRouter>

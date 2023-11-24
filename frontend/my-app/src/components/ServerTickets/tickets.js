@@ -11,7 +11,7 @@ import {
 import TicketForm from "../CreateTickets/createtickets";
 
 const Tickets = () => {
-    const { serverId } = useParams();
+    const params = useParams();
     const [tickets, setTickets] = useState([]);
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const navigate = useNavigate();
@@ -21,13 +21,14 @@ const Tickets = () => {
             try {
                 const token = localStorage.getItem("token");
                 const response = await axios.get(
-                    `http://localhost:5000/getAllTickets/${serverId}`,
+                    `http://localhost:5000/getAllTickets/${params.id}`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,
                         },
                     }
                 );
+                console.log(response.data);
                 setTickets(response.data);
             } catch (error) {
                 console.error("Error fetching tickets: ", error);
@@ -35,7 +36,7 @@ const Tickets = () => {
         };
 
         fetchTickets();
-    }, [serverId]);
+    }, [params.id]);
 
     const openModal = () => {
         setModalIsOpen(true);
@@ -50,13 +51,12 @@ const Tickets = () => {
     const switchTab = (tab) => {
         setSelectedTab(tab);
     };
-    
 
     const handleChat = () => {
         navigate("/chat");
     };
     const handleannouncements = () => {
-        navigate("/announcements");
+        navigate(`/announcements/${params.id}`);
     };
     const handletickets = () => {
         navigate("/tickets");
@@ -84,7 +84,9 @@ const Tickets = () => {
                 <button
                     onClick={handleChat}
                     className={`w-full py-2 mb-2 rounded-md text-left ${
-                        selectedTab === "chat" ? "bg-indigo-500 text-white" : "hover:bg-gray-300"
+                        selectedTab === "chat"
+                            ? "bg-indigo-500 text-white"
+                            : "hover:bg-gray-300"
                     }`}
                 >
                     Chat
@@ -115,16 +117,22 @@ const Tickets = () => {
 
                 {/* Placeholder for Tickets */}
                 <div className="flex flex-wrap">
-                    {[...Array(10).keys()].map((index) => (
+                    {tickets.map((ticket, index) => (
                         <div
                             key={index}
                             className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 p-4"
                         >
                             <div className="bg-white p-4 rounded-md shadow-md">
-                                <p className="font-semibold">Ticket {index + 1}</p>
-                                <p className="text-gray-500 mt-2">Assignee: Hassan Yahya</p>
-                                <p className="text-gray-500">Reporter: Hassan Yahya</p>
-                                <p className="text-gray-500">Status: To Do</p>
+                                <p className="font-semibold">
+                                    Ticket {ticket.title}
+                                </p>
+                                <p className="text-gray-500 mt-2">
+                                    Assignee: {ticket.assignee.name}
+                                </p>
+                                <p className="text-gray-500">
+                                    Reporter: {ticket.reporter.name}
+                                </p>
+                                <p className="text-gray-500">Status: {ticket.status}</p>
                             </div>
                         </div>
                     ))}
@@ -142,7 +150,5 @@ const Tickets = () => {
         </div>
     );
 };
-
-
 
 export default Tickets;

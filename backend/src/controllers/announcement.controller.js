@@ -56,13 +56,13 @@ exports.createAnnouncement = async (req, res) => {
 
 // Read
 exports.getAnnouncements = async (req, res) => {
-    logEndPoint("GET", "/announcements");
+    logEndPoint("GET", "/announcements/:serverId");
 
     try {
         const decoded = req.decoded;
 
         const userId = decoded.id;
-        const serverId = req.body.serverId; // Assuming serverId is in the request parameters
+        const serverId = req.params.id; // Assuming serverId is in the request parameters
 
         // Check if the user is a member in the server
         const isMember = await checkUserInServer(serverId, userId);
@@ -72,7 +72,7 @@ exports.getAnnouncements = async (req, res) => {
             try {
                 const announcements = await Announcement.find({
                     server: serverId,
-                });
+                }).populate("createdBy", "name");
                 res.json(announcements);
             } catch (err) {
                 res.status(500).json({ message: err });

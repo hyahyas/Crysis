@@ -22,6 +22,11 @@ recordRoutes
 recordRoutes
     .route("/announcements/:id")
     // .put(extractToken, updateAnnouncement)
+    .get(
+        extractToken,
+        [param("id").isMongoId().withMessage("Invalid server ID")],
+        getAnnouncements
+    )
     .delete(
         extractToken,
         [param("id").isMongoId().withMessage("Invalid announcement ID")],

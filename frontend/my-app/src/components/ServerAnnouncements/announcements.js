@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
+import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSun, faMoon, faEnvelope, faBullhorn, faTicketAlt, faCloudMoon, faHome } from "@fortawesome/free-solid-svg-icons";
 
 
 const Announcements = () => {
     const [currentPage, setCurrentPage] = useState(1);
+    const params = useParams();
     const navigate = useNavigate()
     const itemsPerPage = 5; // pagenation
+    const [announcements, setAnnouncements] = useState([]);
 
     const placeholderAnnouncements = [
         {
@@ -61,6 +64,28 @@ const Announcements = () => {
         }
     ];
 
+    useEffect(() => {
+        const fetchAnnouncements = async () => {
+            try {
+                const token = localStorage.getItem("token");
+                const response = await axios.get(
+                    `http://localhost:5000/announcements/${params.id}`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
+                );
+                console.log(response.data);
+                setAnnouncements(response.data);
+            } catch (error) {
+                console.error("Error fetching announcements: ", error);
+            }
+        };
+
+        fetchAnnouncements();
+    }, [params.id]);
+
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const currentAnnouncements = placeholderAnnouncements.slice(indexOfFirstItem, indexOfLastItem);
@@ -76,7 +101,7 @@ const Announcements = () => {
     };
 
     const handleTicketsClick = () => {
-        navigate("/tickets");
+        navigate(`/tickets/${params.id}`);
     };
     const handleHomeClick = () => {
         navigate("/home");
@@ -94,7 +119,7 @@ const Announcements = () => {
             {/* Top header (black) */}
             <div className={`bg-${darkMode ? 'gray-900' : 'white-800'} text-white p-4`}>
                 <div className="flex justify-between items-center">
-                    <h2 className={`text-lg font-bold ${darkMode ? 'text-black' : 'text-black'}`}>this Server's Announcements</h2>
+                    <h2 className={`text-lg font-bold ${darkMode ? 'text-white' : 'text-black'}`}>This Server's Announcements</h2>
                     <div className="flex space-x-4">
                         <button onClick={toggleDarkMode} className={`bg-indigo-500 px-4 py-2 rounded-md ${darkMode ? 'dark:bg-black-700' : ''}`}>
                             <FontAwesomeIcon icon={darkMode ? faSun : faMoon} className="text-white" />
@@ -112,7 +137,7 @@ const Announcements = () => {
 
 
             {/* Content area */}
-            <div className="grid grid-cols-12 gap-6 p-4">
+            <div className={`bg-${darkMode ? 'gray-900' : 'white-800'} grid grid-cols-12 gap-6 p-4`}>
                 {/* Left column for chat, announcements, and tickets */}
                 <div className="col-span-3 bg-gray-200 p-4">
                     <button
@@ -137,21 +162,21 @@ const Announcements = () => {
 
                 {/* Main content area */}
                 <div className="col-span-9">
-                    <h2 className="text-2xl font-bold mb-4">Announcements</h2>
+                    <h2 className={`text-2xl font-bold mb-4 ${darkMode ? 'text-white' : 'text-black'}`}>Announcements</h2>
 
                     {/* Display Announcements */}
-                    {currentAnnouncements.map((announcement) => (
+                    {announcements.map((announcement) => (
                         <div key={announcement.id} className="mb-8 bg-white p-6 rounded-md shadow-md">
                             <h3 className="text-xl font-bold mb-2">{announcement.title}</h3>
                             <p className="text-gray-500 mb-2">{announcement.date}</p>
                             <p className="text-gray-800">{announcement.description}</p>
-                            <p className="text-gray-500 mt-2">Created by: {announcement.createdBy}</p>
+                            <p className="text-gray-500 mt-2">Created by: {announcement.createdBy.name}</p>
                         </div>
                     ))}
 
                     {/* Pagination */}
                     <div className="flex justify-center mt-4">
-                        {Array.from({ length: Math.ceil(placeholderAnnouncements.length / itemsPerPage) }, (_, index) => (
+                        {Array.from({ length: Math.ceil(announcements.length / itemsPerPage) }, (_, index) => (
                             <button
                                 key={index}
                                 onClick={() => paginate(index + 1)}
