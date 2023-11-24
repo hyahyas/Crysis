@@ -41,7 +41,7 @@ const Announcements = () => {
 
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
     const handleChatClick = () => {
-        navigate("/chat");
+        navigate(`/chat/${params.id}`);
     };
 
     const handleAnnouncementsClick = () => {
@@ -90,19 +90,19 @@ const Announcements = () => {
                 <div className="col-span-3 bg-gray-200">
                     <button
                         onClick={handleAnnouncementsClick}
-                        className="w-full p-2 mb-2  text-left bg-indigo-500 text-white"
+                        className="w-full p-2 mb-2 rounded-md text-left bg-indigo-500 text-white"
                     >
                         Announcements
                     </button>
                     <button
                         onClick={handleChatClick}
-                        className="w-full p-2 mb-2  text-left "
+                        className="w-full p-2 mb-2 rounded-md text-left "
                     >
                         Chat
                     </button>
                     <button
                         onClick={handleTicketsClick}
-                        className="w-full p-2 mb-2  text-left "
+                        className="w-full p-2 mb-2 rounded-md text-left "
                     >
                         Tickets
                     </button>

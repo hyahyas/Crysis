@@ -55,13 +55,13 @@ const Tickets = () => {
     };
 
     const handleChat = () => {
-        navigate("/chat");
+        navigate(`/chat/${params.id}`);
     };
     const handleannouncements = () => {
         navigate(`/announcements/${params.id}`);
     };
     const handletickets = () => {
-        navigate("/tickets");
+        navigate(`/tickets/${params.id}`);
     };
 
     const handleCreateTicket = (newTicket) => {
@@ -98,10 +98,10 @@ const Tickets = () => {
                     </div>
                 </div>
             </div>
-            <div className="flex h-screen">
+            <div className={`bg-${darkMode ? 'gray-900' : 'white-800'} grid grid-cols-12 gap-6 h-screen`}>
                 
                 {/* Left Side Column */}
-                <div className="w-1/4 bg-gray-200">
+                {/* <div className="w-1/4 bg-gray-200">
                     <button
                         onClick={handleannouncements}
                         className={`w-full p-2 mb-2 rounded-md text-left ${
@@ -132,15 +132,35 @@ const Tickets = () => {
                     >
                         Tickets
                     </button>
+                </div> */}
+                <div className="col-span-3 bg-gray-200">
+                    <button
+                        onClick={handleannouncements}
+                        className="w-full p-2 mb-2 rounded-md text-left"
+                    >
+                        Announcements
+                    </button>
+                    <button
+                        onClick={handleChat}
+                        className="w-full p-2 mb-2 rounded-md text-left "
+                    >
+                        Chat
+                    </button>
+                    <button
+                        onClick={handletickets}
+                        className="w-full p-2 mb-2 rounded-md text-left bg-indigo-500 text-white"
+                    >
+                        Tickets
+                    </button>
                 </div>
 
                 {/* Main Content */}
-                <div className="flex-1 p-4">
+                <div className="col-span-9">
                     <div className="flex justify-between items-center mb-4">
-                        <h2 className="text-2xl font-bold">Tickets</h2>
+                        <h2 className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-black'}`}>Tickets</h2>
                         <button
                             onClick={openModal}
-                            className="bg-indigo-500 text-white px-4 py-2 rounded-md"
+                            className="bg-indigo-500 text-white px-4 py-2 rounded-md end"
                         >
                             Create Ticket
                         </button>
