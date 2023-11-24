@@ -12,58 +12,6 @@ const Announcements = () => {
     const itemsPerPage = 5; // pagenation
     const [announcements, setAnnouncements] = useState([]);
 
-    const placeholderAnnouncements = [
-        {
-            id: 1,
-            title: "Placeholder Announcement 1",
-            description: "This is a placeholder announcement. Add your content here.",
-            createdBy: "Ahsan Ali Khan",
-            date: "2023-01-15",
-        },
-        {
-            id: 2,
-            title: "Placeholder Announcement 2",
-            description: "Another placeholder announcement. Customize as needed.",
-            createdBy: "hassan",
-            date: "2023-01-20",
-        },
-        {
-            id: 3,
-            title: "Placeholder Announcement 3",
-            description: "This is a placeholder announcement. Add your content here.",
-            createdBy: "Ahsan Ali Khan",
-            date: "2023-01-15",
-        },
-        {
-            id: 4,
-            title: "Placeholder Announcement 4",
-            description: "Another placeholder announcement. Customize as needed.",
-            createdBy: "hassan",
-            date: "2023-01-20",
-        },
-        {
-            id: 5,
-            title: "Placeholder Announcement 5",
-            description: "This is a placeholder announcement. Add your content here.",
-            createdBy: "Ahsan Ali Khan",
-            date: "2023-01-15",
-        },
-        {
-            id: 6,
-            title: "Placeholder Announcement 6",
-            description: "Another placeholder announcement. Customize as needed.",
-            createdBy: "hassan",
-            date: "2023-01-20",
-        },
-        {
-            id: 7,
-            title: "Placeholder Announcement 7",
-            description: "This is a placeholder announcement. Add your content here.",
-            createdBy: "Ahsan Ali Khan",
-            date: "2023-01-15",
-        }
-    ];
-
     useEffect(() => {
         const fetchAnnouncements = async () => {
             try {
@@ -88,7 +36,7 @@ const Announcements = () => {
 
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentAnnouncements = placeholderAnnouncements.slice(indexOfFirstItem, indexOfLastItem);
+    // const currentAnnouncements = placeholderAnnouncements.slice(indexOfFirstItem, indexOfLastItem);
     const [darkMode, setDarkMode] = useState(false);
 
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
@@ -137,24 +85,24 @@ const Announcements = () => {
 
 
             {/* Content area */}
-            <div className={`bg-${darkMode ? 'gray-900' : 'white-800'} grid grid-cols-12 gap-6 p-4`}>
+            <div className={`bg-${darkMode ? 'gray-900' : 'white-800'} grid grid-cols-12 gap-6 h-screen`}>
                 {/* Left column for chat, announcements, and tickets */}
-                <div className="col-span-3 bg-gray-200 p-4">
+                <div className="col-span-3 bg-gray-200">
                     <button
                         onClick={handleAnnouncementsClick}
-                        className="w-full py-2 mb-2 rounded-md text-left bg-indigo-500 text-white"
+                        className="w-full p-2 mb-2  text-left bg-indigo-500 text-white"
                     >
                         Announcements
                     </button>
                     <button
                         onClick={handleChatClick}
-                        className="w-full py-2 mb-2 rounded-md text-left "
+                        className="w-full p-2 mb-2  text-left "
                     >
                         Chat
                     </button>
                     <button
                         onClick={handleTicketsClick}
-                        className="w-full py-2 mb-2 rounded-md text-left "
+                        className="w-full p-2 mb-2  text-left "
                     >
                         Tickets
                     </button>

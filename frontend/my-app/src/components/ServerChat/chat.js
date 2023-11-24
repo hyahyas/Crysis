@@ -1,28 +1,29 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSun, faMoon, faEnvelope, faBullhorn, faTicketAlt, faCloudMoon, faHome } from "@fortawesome/free-solid-svg-icons";
 
 
-const Announcements = () => {
+const Chats = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const navigate = useNavigate()
     const itemsPerPage = 5; // pagenation
+    const params = useParams();
 
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const [darkMode, setDarkMode] = useState(false);
 
     const handleChatClick = () => {
-        navigate("/chat");
-    };
-
-    const handleAnnouncementsClick = () => {
         // No need to navigate, as the announcements are already on this page
     };
 
+    const handleAnnouncementsClick = () => {
+        navigate(`/chat/${params.id}`);
+    };
+
     const handleTicketsClick = () => {
-        navigate("/tickets");
+        navigate(`/tickets/${params.id}`);
     };
     const handleHomeClick = () => {
         navigate("/home");
@@ -83,7 +84,7 @@ const Announcements = () => {
 
                 {/* Main content area */}
                 <div className="col-span-9">
-                    <h2 className="text-2xl font-bold mb-4">Announcements</h2>
+                    <h2 className="text-2xl font-bold mb-4">Chats</h2>
 
                     
                     
@@ -93,4 +94,4 @@ const Announcements = () => {
     );
 };
 
-export default Announcements;
+export default Chats;
