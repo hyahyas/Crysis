@@ -109,8 +109,9 @@ exports.getMyServers = async (req, res) => {
         }
 
         const servers = memberships.map((membership) => membership.server);
-
-        res.json(servers);
+        // remove null from array
+        const filteredServers = servers.filter((server) => server !== null);
+        res.json(filteredServers);
     } catch (err) {
         handleError(res, err);
     }

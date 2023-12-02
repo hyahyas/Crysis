@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSun, faMoon, faEnvelope, faBullhorn, faTicketAlt, faCloudMoon, faHome } from "@fortawesome/free-solid-svg-icons";
+import custom_header from "../Header/header";
 
 
 const Announcements = () => {
@@ -41,7 +42,7 @@ const Announcements = () => {
 
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
     const handleChatClick = () => {
-        navigate("/chat");
+        navigate(`/chat/${params.id}`);
     };
 
     const handleAnnouncementsClick = () => {
@@ -65,7 +66,7 @@ const Announcements = () => {
     return (
         <div>
             {/* Top header (black) */}
-            <div className={`bg-${darkMode ? 'gray-900' : 'white-800'} text-white p-4`}>
+            {/* <div className={`bg-${darkMode ? 'gray-900' : 'white-800'} text-white p-4`}>
                 <div className="flex justify-between items-center">
                     <h2 className={`text-lg font-bold ${darkMode ? 'text-white' : 'text-black'}`}>This Server's Announcements</h2>
                     <div className="flex space-x-4">
@@ -81,7 +82,8 @@ const Announcements = () => {
                         
                     </div>
                 </div>
-            </div>
+            </div> */}
+            {custom_header("Announcements", darkMode, toggleDarkMode, handleLogout, handleHomeClick)}
 
 
             {/* Content area */}

@@ -6,6 +6,7 @@ const {
     logEndPoint,
     handleError,
 } = require("../utils/util");
+const { User, Role } = require("../models/user.model");
 
 // Create a new ticket
 exports.createTicket = async (req, res) => {
@@ -18,8 +19,11 @@ exports.createTicket = async (req, res) => {
 
     try {
         const decoded = req.decoded;
-        const { title, description, status, assigneeId, serverId } = req.body;
+        const { title, description, status, assigneeEmail, serverId } = req.body;
         const reporterId = decoded.id;
+        const assigneeId = await User.findOne({ email: assigneeEmail }).select(
+            "_id"
+        );
 
         // Ensure the ticket is created in the by admin of server
         const isAdmin = await checkUserIsAdmin(serverId, reporterId);
@@ -37,7 +41,7 @@ exports.createTicket = async (req, res) => {
                 .json({ message: "Assignee is not a member of this server" });
         }
 
-        const ticket = new Ticket({
+        let ticket = new Ticket({
             title,
             description,
             status,
@@ -47,6 +51,11 @@ exports.createTicket = async (req, res) => {
         });
 
         await ticket.save();
+
+        ticket = await Ticket.findById(ticket._id).populate(
+            "assignee reporter",
+            "name name"
+        );
 
         res.json({ message: "Ticket created successfully", ticket });
     } catch (err) {

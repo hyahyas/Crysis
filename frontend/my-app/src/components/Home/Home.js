@@ -183,8 +183,8 @@ const Home = () => {
       navigate(`/announcements/${serverId}`);
     };
 
-    const handleChatPage = () => {
-        navigate("/chat");
+    const handleChatPage = (serverId) => {
+        navigate(`/chat/${serverId}`);
     };
 
     const toggleDarkMode = () => {
@@ -377,7 +377,7 @@ const Home = () => {
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                         {teamsAdmin.map((team) => (
                             <div
-                                key={team.id}
+                                key={team._id}
                                 className={`bg-white p-4 rounded-md shadow-md ${
                                     darkMode ? "dark:bg-gray-300" : ""
                                 } h-full`}
@@ -398,7 +398,7 @@ const Home = () => {
                                 </p>
                                 <div className="mt-4 flex justify-between">
                                     <button
-                                        onClick={handleChatPage}
+                                        onClick={()=>handleChatPage(team._id)}
                                         className={`bg-indigo-500 px-3 py-1.5 text-white rounded-md ${
                                             darkMode ? "dark:bg-gray-600" : ""
                                         }`}

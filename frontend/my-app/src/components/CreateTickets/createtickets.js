@@ -5,6 +5,7 @@ const TicketForm = ({ serverId, closeModal, handleCreateTicket }) => {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [status, setStatus] = useState("To Do"); // Default status
+    const [assigneeEmail, setAssigneeEmail] = useState("");
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -18,6 +19,7 @@ const TicketForm = ({ serverId, closeModal, handleCreateTicket }) => {
                     description,
                     status,
                     serverId,
+                    assigneeEmail,
                 },
                 {
                     headers: {
@@ -64,6 +66,20 @@ const TicketForm = ({ serverId, closeModal, handleCreateTicket }) => {
                         onChange={(e) => setDescription(e.target.value)}
                         rows="3"
                         className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:ring focus:border-indigo-300"
+                    />
+                </div>
+
+                <div>
+                    <label htmlFor="assignee email" className="block text-sm font-medium text-gray-900">
+                        Assignee Email
+                    </label>
+                    <input
+                        id="assignee email"
+                        type="email"
+                        value={assigneeEmail}
+                        onChange={(e) => setAssigneeEmail(e.target.value)}
+                        className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:ring focus:border-indigo-300"
+                        required
                     />
                 </div>
 

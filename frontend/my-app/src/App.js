@@ -28,7 +28,7 @@ function App() {
                             <Route path="/test" element={<Test />} />
                             <Route path="/newteam" element={<CreateTeam />} />
                             <Route path="/tickets/:id" element={<ServerTickets />} />
-                            <Route path="/chat" element={<SeverChat />} />
+                            <Route path="/chat/:id" element={<SeverChat />} />
                             <Route path="/announcements/:id" element={<ServerAnnouncements />} />
                             <Route path="/createticket" element={<CreateTickets />} />
                         </Routes>

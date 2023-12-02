@@ -2,9 +2,10 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Modal from "react-modal";
 import { Link, useNavigate, useParams } from "react-router-dom"; // Import Link and useParams for navigation
+import  custom_header from "../Header/header";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSun, faMoon, faHome } from "@fortawesome/free-solid-svg-icons";
 import TicketForm from "../CreateTickets/createtickets";
-import { faSun, faMoon, faEnvelope, faBullhorn, faTicketAlt, faCloudMoon, faHome } from "@fortawesome/free-solid-svg-icons";
 
 const Tickets = () => {
     const params = useParams();
@@ -55,13 +56,13 @@ const Tickets = () => {
     };
 
     const handleChat = () => {
-        navigate("/chat");
+        navigate(`/chat/${params.id}`);
     };
     const handleannouncements = () => {
         navigate(`/announcements/${params.id}`);
     };
     const handletickets = () => {
-        navigate("/tickets");
+        navigate(`/tickets/${params.id}`);
     };
 
     const handleCreateTicket = (newTicket) => {
@@ -81,7 +82,7 @@ const Tickets = () => {
     return (
         <div>
             {/* Top header (black) */}
-            <div className={`bg-${darkMode ? 'gray-900' : 'white-800'} text-white p-4`}>
+            {/* <div className={`bg-${darkMode ? 'gray-900' : 'white-800'} text-white p-4`}>
                 <div className="flex justify-between items-center">
                     <h2 className={`text-lg font-bold ${darkMode ? 'text-white' : 'text-black'}`}>This Server's Tickets</h2>
                     <div className="flex space-x-4">
@@ -97,11 +98,13 @@ const Tickets = () => {
                         
                     </div>
                 </div>
-            </div>
-            <div className="flex h-screen">
-                
+            </div> */}
+            {custom_header("Tickets", darkMode, toggleDarkMode, handleLogout, handleHomeClick)}
+            {/* Content area */}
+            
+            <div className={`bg-${darkMode ? 'gray-900' : 'white-800'} grid grid-cols-12 gap-6 h-screen`}>
                 {/* Left Side Column */}
-                <div className="w-1/4 bg-gray-200">
+                {/* <div className="w-1/4 bg-gray-200">
                     <button
                         onClick={handleannouncements}
                         className={`w-full p-2 mb-2 rounded-md text-left ${
@@ -132,12 +135,32 @@ const Tickets = () => {
                     >
                         Tickets
                     </button>
+                </div> */}
+                <div className="col-span-3 bg-gray-200">
+                    <button
+                        onClick={handleannouncements}
+                        className="w-full p-2 mb-2  text-left"
+                    >
+                        Announcements
+                    </button>
+                    <button
+                        onClick={handleChat}
+                        className="w-full p-2 mb-2  text-left "
+                    >
+                        Chat
+                    </button>
+                    <button
+                        onClick={handletickets}
+                        className="w-full p-2 mb-2  text-left bg-indigo-500 text-white"
+                    >
+                        Tickets
+                    </button>
                 </div>
 
                 {/* Main Content */}
-                <div className="flex-1 p-4">
+                <div className="col-span-9">
                     <div className="flex justify-between items-center mb-4">
-                        <h2 className="text-2xl font-bold">Tickets</h2>
+                        <h2 className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-black'}`}>Tickets</h2>
                         <button
                             onClick={openModal}
                             className="bg-indigo-500 text-white px-4 py-2 rounded-md"
@@ -155,7 +178,7 @@ const Tickets = () => {
                             >
                                 <div className="bg-white p-4 rounded-md shadow-md">
                                     <p className="font-semibold">
-                                        Ticket {ticket.title}
+                                        {ticket.title}
                                     </p>
                                     <p className="text-gray-500 mt-2">
                                         Assignee: {ticket.assignee.name}
@@ -176,6 +199,7 @@ const Tickets = () => {
                         contentLabel="Create Ticket Modal"
                     >
                         {/* ... (TicketForm component) */}
+                        <TicketForm handleCreateTicket={handleCreateTicket} closeModal={closeModal} serverId={params.id}/>
                     </Modal>
                 </div>
             </div>
