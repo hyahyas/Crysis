@@ -19,7 +19,8 @@ exports.createTicket = async (req, res) => {
 
     try {
         const decoded = req.decoded;
-        const { title, description, status, assigneeEmail, serverId } = req.body;
+        const { title, description, status, assigneeEmail, serverId } =
+            req.body;
         const reporterId = decoded.id;
         const assigneeId = await User.findOne({ email: assigneeEmail }).select(
             "_id"
@@ -80,14 +81,15 @@ exports.getAllTickets = async (req, res) => {
                 .json({ message: "You are not a admin in this server" });
         }
 
-        const tickets = await Ticket.find({ server: queryServerId }).populate("assignee reporter", "name email").sort({ updatedAt: -1 });
+        const tickets = await Ticket.find({ server: queryServerId })
+            .populate("assignee reporter", "name email")
+            .sort({ updatedAt: -1 });
 
         res.json(tickets);
     } catch (err) {
         handleError(res, err);
     }
 };
-
 
 // Update a ticket by ID
 exports.updateTicket = async (req, res) => {
