@@ -4,6 +4,9 @@ import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSun, faMoon, faEnvelope, faBullhorn, faTicketAlt, faCloudMoon, faHome } from "@fortawesome/free-solid-svg-icons";
 import custom_header from "../Header/header";
+import Modal from "react-modal";
+import TicketForm from "../CreateTickets/createtickets";
+
 
 
 const Announcements = () => {
@@ -12,6 +15,7 @@ const Announcements = () => {
     const navigate = useNavigate()
     const itemsPerPage = 5; // pagenation
     const [announcements, setAnnouncements] = useState([]);
+    const [modalIsOpen, setModalIsOpen] = useState(false);
 
     useEffect(() => {
         const fetchAnnouncements = async () => {
@@ -83,7 +87,7 @@ const Announcements = () => {
                     </div>
                 </div>
             </div> */}
-            {custom_header("Announcements", darkMode, toggleDarkMode, handleLogout, handleHomeClick)}
+            {custom_header("This Server's Announcements", darkMode, toggleDarkMode, handleLogout, handleHomeClick)}
 
 
             {/* Content area */}
@@ -112,7 +116,15 @@ const Announcements = () => {
 
                 {/* Main content area */}
                 <div className="col-span-9">
-                    <h2 className={`text-2xl font-bold mb-4 ${darkMode ? 'text-white' : 'text-black'}`}>Announcements</h2>
+                    <div className="flex justify-between items-center mb-4">
+                        <h2 className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-black'}`}>Announcements</h2>
+                        <button
+                            onClick={() => setModalIsOpen(true)}
+                            className="bg-indigo-500 text-white px-4 py-2 rounded-md mr-4"
+                        >
+                            Create Annnouncement
+                        </button>
+                    </div>
 
                     {/* Display Announcements */}
                     {announcements.map((announcement) => (
@@ -138,6 +150,15 @@ const Announcements = () => {
                             </button>
                         ))}
                     </div>
+
+                    {/* Ticket Creation Modal */}
+                    <Modal
+                        isOpen={modalIsOpen}
+                        onRequestClose={() => setModalIsOpen(false)}
+                        contentLabel="Create Announcement Modal"
+                    >
+                        <h2 className="text-2xl font-bold mb-4">Create Announcement</h2>
+                    </Modal>
                 </div>
             </div>
         </div>

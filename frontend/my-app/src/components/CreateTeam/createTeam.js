@@ -104,7 +104,7 @@ const CreateTeam = ({ onClose, darkMode }) => {
         try {
             const token = localStorage.getItem("token");
             const response = await axios.post(
-                "http://localhost:5000/createTeam",
+                "http://localhost:5000/createServer",
                 {
                     name: teamName,
                     description: teamDescription,
@@ -116,8 +116,8 @@ const CreateTeam = ({ onClose, darkMode }) => {
                 }
             );
 
-            if (response.data.success) {
-                onClose(); // Close the modal
+            if (response.data.message === "Server created successfully") {
+                // onClose(); // Close the modal
                 navigate("/home");
             } else {
                 console.log("Server creation failed:", response.data.message);
@@ -134,11 +134,11 @@ const CreateTeam = ({ onClose, darkMode }) => {
     return (
         <div className={`fixed inset-0 flex items-center justify-center ${darkMode ? 'bg-black bg-opacity-50' : 'bg-white bg-opacity-50'}`}>
             <div className={`max-w-md w-full bg-white p-4 rounded-md shadow-md ${darkMode ? 'dark:bg-gray-700' : ''}`}>
-                <div className="flex justify-end">
+                {/* <div className="flex justify-end">
                     <button onClick={onClose} className={`text-gray-600 hover:text-gray-800 ${darkMode ? 'dark:text-gray-400' : ''}`}>
                         <FontAwesomeIcon icon={faTimes} />
                     </button>
-                </div>
+                </div> */}
                 <h2 className={`text-2xl font-bold mb-4 ${darkMode ? 'text-white' : 'text-gray-900'}`}>Create Team/Server</h2>
                 <form onSubmit={handleCreateTeam} className="space-y-4">
                     <div>
@@ -170,7 +170,8 @@ const CreateTeam = ({ onClose, darkMode }) => {
 
                     <div className="flex justify-between">
                         <button
-                            type="submit"
+                            type="button"
+                            onClick={handleCreateTeam}
                             className={`w-1/2 bg-indigo-500 text-white p-2 rounded-md hover:bg-indigo-600 focus:outline-none focus:ring focus:border-indigo-300 ${darkMode ? 'dark:bg-gray-600' : ''}`}
                         >
                             Create Team

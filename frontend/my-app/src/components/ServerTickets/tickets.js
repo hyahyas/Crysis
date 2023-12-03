@@ -99,7 +99,7 @@ const Tickets = () => {
                     </div>
                 </div>
             </div> */}
-            {custom_header("Tickets", darkMode, toggleDarkMode, handleLogout, handleHomeClick)}
+            {custom_header("This Server's Tickets", darkMode, toggleDarkMode, handleLogout, handleHomeClick)}
             {/* Content area */}
             
             <div className={`bg-${darkMode ? 'gray-900' : 'white-800'} grid grid-cols-12 gap-6 h-screen`}>
@@ -163,7 +163,7 @@ const Tickets = () => {
                         <h2 className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-black'}`}>Tickets</h2>
                         <button
                             onClick={openModal}
-                            className="bg-indigo-500 text-white px-4 py-2 rounded-md"
+                            className="bg-indigo-500 text-white px-4 py-2 rounded-md mr-4"
                         >
                             Create Ticket
                         </button>
