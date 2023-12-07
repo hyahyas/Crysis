@@ -110,19 +110,15 @@ import {
     faBullhorn,
     faTicketAlt,
     faUserPlus,
+    faGear,
     faCloudMoon,
 } from "@fortawesome/free-solid-svg-icons";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import logo from "../Assets/crysis_logo.png";
 import custom_header from "../Header/header";
-
-const navigation = [
-    { name: "Latest Updates", href: "#", current: true },
-    { name: "Create new team", href: "/newteam", current: false },
-    // { name: "Your Servers", href: "#", current: false },
-    // { name: "Servers you have joined", href: "#", current: false },
-];
+import Modal from "react-modal";
+import CreateTeam from "../CreateTeam/createTeam";
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
@@ -133,6 +129,7 @@ const Home = () => {
     const [teamsAdmin, setTeamsAdmin] = useState([]);
     const [teamsMember, setTeamsMember] = useState([]);
     const [darkMode, setDarkMode] = useState(false);
+    const [modalIsOpen, setModalIsOpen] = useState(false);
 
     useEffect(() => {
         // Fetch data for teams
@@ -172,17 +169,17 @@ const Home = () => {
     };
 
     const handleNewTeam = () => {
-        navigate("/newteam");
+        setModalIsOpen(true);
     };
 
     const handleTicketPage = (serverId) => {
-        console.log("sss",serverId);
+        console.log("sss", serverId);
         navigate(`/tickets/${serverId}`);
     };
 
     const handleAnnouncementsPage = (serverId) => {
-      console.log("sss",serverId);
-      navigate(`/announcements/${serverId}`);
+        console.log("sss", serverId);
+        navigate(`/announcements/${serverId}`);
     };
 
     const handleChatPage = (serverId) => {
@@ -194,13 +191,29 @@ const Home = () => {
     };
 
     const handleAddMember = (serverId) => {
-        console.log("sss",serverId);
+        console.log("sss", serverId);
         alert("Add member to server");
     };
 
     const toggleDarkMode = () => {
         setDarkMode(!darkMode);
     };
+    const navigation = [
+        {
+            name: "Latest Updates",
+            href: "#",
+            onclick: console.log("yo"),
+            current: true,
+        },
+        {
+            name: "Create new team",
+            href: "/newteam",
+            onclick: handleNewTeam,
+            current: false,
+        },
+        // { name: "Your Servers", href: "#", current: false },
+        // { name: "Servers you have joined", href: "#", current: false },
+    ];
     return (
         <div
             className={`flex flex-col min-h-screen ${
@@ -218,7 +231,6 @@ const Home = () => {
                         <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
                             <div className="relative flex h-16 items-center justify-between">
                                 <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
-                                  
                                     <Disclosure.Button className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
                                         <span className="absolute -inset-0.5" />
                                         <span className="sr-only">
@@ -250,7 +262,7 @@ const Home = () => {
                                             {navigation.map((item) => (
                                                 <a
                                                     key={item.name}
-                                                    href={item.href}
+                                                    onClick={item.onclick}
                                                     className={classNames(
                                                         item.current
                                                             ? "bg-gray-900 text-white"
@@ -270,7 +282,6 @@ const Home = () => {
                                     </div>
                                 </div>
                                 <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-                                  
                                     <Menu as="div" className="relative ml-3">
                                         <div>
                                             <Menu.Button className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
@@ -297,7 +308,9 @@ const Home = () => {
                                                 <Menu.Item>
                                                     {({ active }) => (
                                                         <a
-                                                            onClick={console.log("Profile clicked")}
+                                                            onClick={console.log(
+                                                                "Profile clicked"
+                                                            )}
                                                             className={classNames(
                                                                 active
                                                                     ? "bg-gray-100"
@@ -379,7 +392,11 @@ const Home = () => {
             {/* Header */}
             {/* {custom_header(`Welcome user, this is your home page`, darkMode, toggleDarkMode, handleLogout, handleHomeClick)} */}
 
-            <div className={`flex-grow p-4 bg-${darkMode ? "gray-900" : "white-800"}`}>
+            <div
+                className={`flex-grow p-4 bg-${
+                    darkMode ? "gray-900" : "white-800"
+                }`}
+            >
                 {/* Rest of your content */}
                 {/* Teams Admin */}
                 <div className="mb-8">
@@ -399,12 +416,12 @@ const Home = () => {
                                 } h-full`}
                             >
                                 <button
-                                        onClick={()=>handleAddMember(team._id)}
-                                        className={`bg-indigo-500 px-3 py-1.5 text-white rounded-md float-right ${
-                                            darkMode ? "dark:bg-gray-600" : ""
-                                        }`}
+                                    onClick={() => handleAddMember(team._id)}
+                                    className={`bg-indigo-500 px-3 py-1.5 text-white rounded-md float-right ${
+                                        darkMode ? "dark:bg-gray-600" : ""
+                                    }`}
                                 >
-                                    <FontAwesomeIcon icon={faUserPlus} />
+                                    <FontAwesomeIcon icon={faGear} />
                                 </button>
                                 <p
                                     className={`font-semibold ${
@@ -413,7 +430,7 @@ const Home = () => {
                                 >
                                     {team.name}
                                 </p>
-                                
+
                                 <p
                                     className={`text-gray-500 mt-2 ${
                                         darkMode ? "" : "text-black"
@@ -423,15 +440,9 @@ const Home = () => {
                                 </p>
                                 <div className="mt-4 flex justify-between">
                                     <button
-                                        onClick={()=>handleChatPage(team._id)}
-                                        className={`bg-indigo-500 px-3 py-1.5 text-white rounded-md ${
-                                            darkMode ? "dark:bg-gray-600" : ""
-                                        }`}
-                                    >
-                                        <FontAwesomeIcon icon={faEnvelope} />
-                                    </button>
-                                    <button
-                                        onClick={()=>handleAnnouncementsPage(team._id)}
+                                        onClick={() =>
+                                            handleAnnouncementsPage(team._id)
+                                        }
                                         className={`bg-indigo-500 px-3 py-1.5 text-white rounded-md ${
                                             darkMode ? "dark:bg-gray-600" : ""
                                         }`}
@@ -439,7 +450,17 @@ const Home = () => {
                                         <FontAwesomeIcon icon={faBullhorn} />
                                     </button>
                                     <button
-                                        onClick={()=>handleTicketPage(team._id)}
+                                        onClick={() => handleChatPage(team._id)}
+                                        className={`bg-indigo-500 px-3 py-1.5 text-white rounded-md ${
+                                            darkMode ? "dark:bg-gray-600" : ""
+                                        }`}
+                                    >
+                                        <FontAwesomeIcon icon={faEnvelope} />
+                                    </button>
+                                    <button
+                                        onClick={() =>
+                                            handleTicketPage(team._id)
+                                        }
                                         className={`bg-indigo-500 px-3 py-1.5 text-white rounded-md ${
                                             darkMode ? "dark:bg-gray-600" : ""
                                         }`}
@@ -470,12 +491,12 @@ const Home = () => {
                                 } h-full`}
                             >
                                 <button
-                                        onClick={()=>handleAddMember(team._id)}
-                                        className={`bg-indigo-500 px-3 py-1.5 text-white rounded-md float-right ${
-                                            darkMode ? "dark:bg-gray-600" : ""
-                                        }`}
+                                    onClick={() => handleAddMember(team._id)}
+                                    className={`bg-indigo-500 px-3 py-1.5 text-white rounded-md float-right ${
+                                        darkMode ? "dark:bg-gray-600" : ""
+                                    }`}
                                 >
-                                    <FontAwesomeIcon icon={faUserPlus} />
+                                    <FontAwesomeIcon icon={faGear} />
                                 </button>
                                 <p
                                     className={`font-semibold ${
@@ -493,20 +514,22 @@ const Home = () => {
                                 </p>
                                 <div className="mt-4 flex justify-between">
                                     <button
+                                        onClick={() =>
+                                            handleAnnouncementsPage(team._id)
+                                        }
+                                        className={`bg-indigo-500 px-3 py-1.5 text-white rounded-md ${
+                                            darkMode ? "dark:bg-gray-600" : ""
+                                        }`}
+                                    >
+                                        <FontAwesomeIcon icon={faBullhorn} />
+                                    </button>
+                                    <button
                                         onClick={handleChatPage}
                                         className={`bg-indigo-500 px-3 py-1.5 text-white rounded-md ${
                                             darkMode ? "dark:bg-gray-600" : ""
                                         }`}
                                     >
                                         <FontAwesomeIcon icon={faEnvelope} />
-                                    </button>
-                                    <button
-                                        onClick={()=>handleAnnouncementsPage(team._id)}
-                                        className={`bg-indigo-500 px-3 py-1.5 text-white rounded-md ${
-                                            darkMode ? "dark:bg-gray-600" : ""
-                                        }`}
-                                    >
-                                        <FontAwesomeIcon icon={faBullhorn} />
                                     </button>
                                     <button
                                         onClick={handleTicketPage}
@@ -521,6 +544,22 @@ const Home = () => {
                         ))}
                     </div>
                 </div>
+
+                {/* Modal */}
+                <Modal
+                    isOpen={modalIsOpen}
+                    onRequestClose={() => setModalIsOpen(false)}
+                    contentLabel="Create Team Modal"
+                    className={`max-w-md w-full bg-white p-4 rounded-md shadow-md ${
+                        darkMode ? "dark:bg-gray-700" : ""
+                    }`}
+                >
+                    <CreateTeam
+                        darkMode={darkMode}
+                        toggleDarkMode={toggleDarkMode}
+                        setModalIsOpen={setModalIsOpen}
+                    />
+                </Modal>
             </div>
         </div>
     );

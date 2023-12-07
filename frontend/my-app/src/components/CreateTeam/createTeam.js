@@ -86,14 +86,13 @@
 
 // export default CreateTeam;
 
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 
-const CreateTeam = ({ onClose, darkMode }) => {
+const CreateTeam = ({ onClose, darkMode, setModalIsOpen, toggleDarkMode }) => {
     const navigate = useNavigate();
     const [teamName, setTeamName] = useState("");
     const [teamDescription, setTeamDescription] = useState("");
@@ -118,7 +117,7 @@ const CreateTeam = ({ onClose, darkMode }) => {
 
             if (response.data.message === "Server created successfully") {
                 // onClose(); // Close the modal
-                navigate("/home");
+                setModalIsOpen(false);
             } else {
                 console.log("Server creation failed:", response.data.message);
             }
@@ -128,65 +127,100 @@ const CreateTeam = ({ onClose, darkMode }) => {
     };
 
     const handleCancel = () => {
-        navigate("/home");
+        // onClose(); // Close the modal
+        setModalIsOpen(false);
     };
 
     return (
-        <div className={`fixed inset-0 flex items-center justify-center ${darkMode ? 'bg-black bg-opacity-50' : 'bg-white bg-opacity-50'}`}>
-            <div className={`max-w-md w-full bg-white p-4 rounded-md shadow-md ${darkMode ? 'dark:bg-gray-700' : ''}`}>
-                {/* <div className="flex justify-end">
-                    <button onClick={onClose} className={`text-gray-600 hover:text-gray-800 ${darkMode ? 'dark:text-gray-400' : ''}`}>
-                        <FontAwesomeIcon icon={faTimes} />
+        // <div
+        //     className={`fixed inset-0 flex items-center justify-center ${
+        //         darkMode ? "bg-black bg-opacity-50" : "bg-white bg-opacity-50"
+        //     }`}
+        // >
+        // <div
+        //     className={`max-w-md w-full bg-white p-4 rounded-md shadow-md ${
+        //         darkMode ? "dark:bg-gray-700" : ""
+        //     }`}
+        // >
+
+        <div>
+            <h2
+                className={`text-2xl font-bold mb-4 ${
+                    darkMode ? "text-white" : "text-gray-900"
+                }`}
+            >
+                Create Team/Server
+            </h2>
+            <form onSubmit={handleCreateTeam} className="space-y-4">
+                <div>
+                    <label
+                        htmlFor="teamName"
+                        className={`block text-sm font-medium ${
+                            darkMode ? "text-white" : "text-gray-900"
+                        }`}
+                    >
+                        Server Name
+                    </label>
+                    <input
+                        id="teamName"
+                        type="text"
+                        value={teamName}
+                        onChange={(e) => setTeamName(e.target.value)}
+                        className={`mt-1 p-2 w-full border rounded-md focus:outline-none focus:ring focus:border-indigo-300 ${
+                            darkMode
+                                ? "dark:border-gray-600 dark:bg-gray-800 dark:text-white"
+                                : ""
+                        }`}
+                        required
+                    />
+                </div>
+
+                <div>
+                    <label
+                        htmlFor="teamDescription"
+                        className={`block text-sm font-medium ${
+                            darkMode ? "text-white" : "text-gray-900"
+                        }`}
+                    >
+                        Server Description
+                    </label>
+                    <textarea
+                        id="teamDescription"
+                        value={teamDescription}
+                        onChange={(e) => setTeamDescription(e.target.value)}
+                        rows="3"
+                        className={`mt-1 p-2 w-full border rounded-md focus:outline-none focus:ring focus:border-indigo-300 ${
+                            darkMode
+                                ? "dark:border-gray-600 dark:bg-gray-800 dark:text-white"
+                                : ""
+                        }`}
+                    />
+                </div>
+
+                <div className="flex justify-between">
+                    <button
+                        type="button"
+                        onClick={handleCreateTeam}
+                        className={`w-1/2 bg-indigo-500 text-white p-2 rounded-md hover:bg-indigo-600 focus:outline-none focus:ring focus:border-indigo-300 ${
+                            darkMode ? "dark:bg-gray-600" : ""
+                        }`}
+                    >
+                        Create Team
                     </button>
-                </div> */}
-                <h2 className={`text-2xl font-bold mb-4 ${darkMode ? 'text-white' : 'text-gray-900'}`}>Create Team/Server</h2>
-                <form onSubmit={handleCreateTeam} className="space-y-4">
-                    <div>
-                        <label htmlFor="teamName" className={`block text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-                            Server Name
-                        </label>
-                        <input
-                            id="teamName"
-                            type="text"
-                            value={teamName}
-                            onChange={(e) => setTeamName(e.target.value)}
-                            className={`mt-1 p-2 w-full border rounded-md focus:outline-none focus:ring focus:border-indigo-300 ${darkMode ? 'dark:border-gray-600 dark:bg-gray-800 dark:text-white' : ''}`}
-                            required
-                        />
-                    </div>
-
-                    <div>
-                        <label htmlFor="teamDescription" className={`block text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-                            Server Description
-                        </label>
-                        <textarea
-                            id="teamDescription"
-                            value={teamDescription}
-                            onChange={(e) => setTeamDescription(e.target.value)}
-                            rows="3"
-                            className={`mt-1 p-2 w-full border rounded-md focus:outline-none focus:ring focus:border-indigo-300 ${darkMode ? 'dark:border-gray-600 dark:bg-gray-800 dark:text-white' : ''}`}
-                        />
-                    </div>
-
-                    <div className="flex justify-between">
-                        <button
-                            type="button"
-                            onClick={handleCreateTeam}
-                            className={`w-1/2 bg-indigo-500 text-white p-2 rounded-md hover:bg-indigo-600 focus:outline-none focus:ring focus:border-indigo-300 ${darkMode ? 'dark:bg-gray-600' : ''}`}
-                        >
-                            Create Team
-                        </button>
-                        <button
-                            type="button"
-                            onClick={handleCancel}
-                            className={`w-1/2 bg-gray-300 text-gray-800 p-2 rounded-md hover:bg-gray-400 focus:outline-none focus:ring focus:border-indigo-300 ${darkMode ? 'dark:bg-gray-600' : ''}`}
-                        >
-                            Cancel
-                        </button>
-                    </div>
-                </form>
-            </div>
+                    <button
+                        type="button"
+                        onClick={handleCancel}
+                        className={`w-1/2 bg-gray-300 text-gray-800 p-2 rounded-md hover:bg-gray-400 focus:outline-none focus:ring focus:border-indigo-300 ${
+                            darkMode ? "dark:bg-gray-600" : ""
+                        }`}
+                    >
+                        Cancel
+                    </button>
+                </div>
+            </form>
         </div>
+        // </div>
+        // </div>
     );
 };
 
