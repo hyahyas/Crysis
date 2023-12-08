@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSun, faMoon, faEnvelope, faBullhorn, faTicketAlt, faCloudMoon, faHome } from "@fortawesome/free-solid-svg-icons";
+import { faSun, faMoon, faEnvelope, faBullhorn, faTicketAlt, faCloudMoon, faHome, faTimes } from "@fortawesome/free-solid-svg-icons";
 import custom_header from "../Header/header";
 import Modal from "react-modal";
 import TicketForm from "../CreateTickets/createtickets";
@@ -66,6 +66,50 @@ const Announcements = () => {
         localStorage.removeItem("token");
         navigate("/");
     };
+
+    const [announcementDetails, setAnnouncementDetails] = useState({
+        title: "",
+        description: "",
+    });
+    const [message, setMessage] = useState({
+        content: "",
+        type: "", // "warning" or "success"
+    });
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setAnnouncementDetails((prevDetails) => ({
+            ...prevDetails,
+            [name]: value,
+        }));
+    };
+
+    const handleCreateAnnouncement = async () => {
+        try {
+            // Simulate success, replace with actual API call
+            // For example purposes, always show a success message
+            setMessage({
+                content: "Announcement created successfully!",
+                type: "success",
+            });
+
+            // After successful creation, close the modal and reset form
+            setModalIsOpen(false);
+            setAnnouncementDetails({
+                title: "",
+                description: "",
+            });
+        } catch (error) {
+            // Simulate an error, replace with actual error handling
+            setMessage({
+                content: "Error creating announcement. Please try again.",
+                type: "warning",
+            });
+            console.error("Error creating announcement: ", error);
+        }
+    };
+
+
 
     return (
         <div>
@@ -151,17 +195,84 @@ const Announcements = () => {
                         ))}
                     </div>
 
-                    {/* Ticket Creation Modal */}
-                    <Modal
-                        isOpen={modalIsOpen}
-                        onRequestClose={() => setModalIsOpen(false)}
-                        contentLabel="Create Announcement Modal"
+
+
+                {/* Ticket Creation Modal */}
+            <Modal
+                isOpen={modalIsOpen}
+                onRequestClose={() => {
+                    setModalIsOpen(false);
+                    // Clear the message when the modal is closed
+                    setMessage({
+                        content: "",
+                        type: "",
+                    });
+                }}
+                contentLabel="Create Announcement Modal"
+            >
+                <div className="flex justify-between items-center">
+                    <h2 className="text-2xl font-bold mb-4">Create Announcement</h2>
+                    <button
+                        onClick={() => {
+                            setModalIsOpen(false);
+                            setMessage({
+                                content: "",
+                                type: "",
+                            });
+                        }}
+                        className="text-gray-500 hover:text-gray-700 focus:outline-none"
                     >
-                        <h2 className="text-2xl font-bold mb-4">Create Announcement</h2>
-                    </Modal>
+                        <FontAwesomeIcon icon={faTimes} className="text-xl" />
+                    </button>
                 </div>
-            </div>
+                {message.content && (
+                    <div
+                        className={`mb-4 p-2 rounded-md ${
+                            message.type === "success" ? "bg-green-200 text-green-800" : "bg-red-200 text-red-800"
+                        }`}
+                    >
+                        {message.content}
+                    </div>
+                )}
+                <form>
+                <div className="mb-4">
+                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="title">
+                            Title
+                        </label>
+                        <input
+                            type="text"
+                            id="title"
+                            name="title"
+                            value={announcementDetails.title}
+                            onChange={handleInputChange}
+                            className="w-full p-2 border border-gray-300 rounded-md"
+                        />
+                    </div>
+                    <div className="mb-4">
+                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="description">
+                            Description
+                        </label>
+                        <textarea
+                            id="description"
+                            name="description"
+                            value={announcementDetails.description}
+                            onChange={handleInputChange}
+                            className="w-full p-2 border border-gray-300 rounded-md"
+                        />
+                    </div>
+                    <button
+                        type="button"
+                        onClick={handleCreateAnnouncement}
+                        className="bg-indigo-500 text-white px-4 py-2 rounded-md"
+                    >
+                        Create Announcement
+                    </button>
+                </form>
+            </Modal>
         </div>
+    </div>
+</div>
+
     );
 };
 
