@@ -253,20 +253,10 @@ const Tickets = () => {
             )}
 
 <div className={`bg-${darkMode ? 'gray-900' : 'white-800'} grid grid-cols-12 gap-6 h-screen`}>
-                {/* ... (existing code) */}
+            
                 
                 <div className="col-span-9">
-                    <div className="flex justify-between items-center mb-4">
-                        <h2 className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-black'}`}>Tickets</h2>
-                        <button
-                            onClick={openModal}
-                            className="bg-indigo-500 text-white px-4 py-2 rounded-md mr-4"
-                        >
-                            Create Ticket
-                        </button>
-                    </div>
-
-
+                    
                     {/* Ticket Creation Modal */}
                     <Modal
                         isOpen={modalIsOpen}
@@ -277,31 +267,6 @@ const Tickets = () => {
                         <TicketForm handleCreateTicket={handleCreateTicket} closeModal={closeModal} serverId={params.id}/>
                     </Modal>
 
-                    {/* Tickets */}
-                    <div className="flex flex-wrap">
-                        {tickets.map((ticket, index) => (
-                            <div key={index} className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 p-4">
-                                <div className="bg-white p-4 rounded-md shadow-md">
-                                    <p className="font-semibold">
-                                        {ticket.title}
-                                    </p>
-                                    <p className="text-gray-500 mt-2">
-                                        Assignee: {ticket.assignee.name}
-                                    </p>
-                                    <p className="text-gray-500">
-                                        Reporter: {ticket.reporter.name}
-                                    </p>
-                                    <p className="text-gray-500">Status: {ticket.status}</p>
-                                    <button
-                                        onClick={() => handleTicketClick(ticket)}
-                                        className="mt-4 bg-indigo-500 text-white p-2 rounded-md hover:bg-indigo-600 focus:outline-none focus:ring focus:border-indigo-300"
-                                    >
-                                        Edit Status
-                                    </button>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
 
                     {/* Update Status Modal */}
                     {selectedTicket && (
