@@ -229,7 +229,7 @@ exports.deleteTicket = async (req, res) => {
 
 // Change ticket status
 exports.changeTicketStatus = async (req, res) => {
-    logEndPoint("PATCH", "/changeTicketStatus");
+    logEndPoint("PUT", "/changeTicketStatus");
 
     try {
         const status = req.body.status;

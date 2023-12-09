@@ -92,7 +92,7 @@ import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 
-const CreateTeam = ({ onClose, darkMode, setModalIsOpen, toggleDarkMode }) => {
+const CreateTeam = ({ onClose, darkMode, toggleDarkMode }) => {
     const navigate = useNavigate();
     const [teamName, setTeamName] = useState("");
     const [teamDescription, setTeamDescription] = useState("");
@@ -116,8 +116,8 @@ const CreateTeam = ({ onClose, darkMode, setModalIsOpen, toggleDarkMode }) => {
             );
 
             if (response.data.message === "Server created successfully") {
-                // onClose(); // Close the modal
-                setModalIsOpen(false);
+                onClose(); // Close the modal
+                // setModalIsOpen(false);
             } else {
                 console.log("Server creation failed:", response.data.message);
             }
@@ -127,8 +127,8 @@ const CreateTeam = ({ onClose, darkMode, setModalIsOpen, toggleDarkMode }) => {
     };
 
     const handleCancel = () => {
-        // onClose(); // Close the modal
-        setModalIsOpen(false);
+        onClose(); // Close the modal
+        // setModalIsOpen(false);
     };
 
     return (
@@ -209,7 +209,7 @@ const CreateTeam = ({ onClose, darkMode, setModalIsOpen, toggleDarkMode }) => {
                     </button>
                     <button
                         type="button"
-                        onClick={handleCancel}
+                        onClick={onClose}
                         className={`w-1/2 bg-gray-300 text-gray-800 p-2 rounded-md hover:bg-gray-400 focus:outline-none focus:ring focus:border-indigo-300 ${
                             darkMode ? "dark:bg-gray-600" : ""
                         }`}

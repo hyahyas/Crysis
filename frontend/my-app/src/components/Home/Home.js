@@ -74,7 +74,7 @@ const Home = () => {
 
     const handleTicketPage = (serverId) => {
         console.log("sss", serverId);
-        navigate(`/tickets/${serverId}`);
+        // navigate(`/tickets/${serverId}`);
     };
 
     const handleAnnouncementsPage = (serverId) => {
@@ -98,6 +98,11 @@ const Home = () => {
     const toggleDarkMode = () => {
         setDarkMode(!darkMode);
     };
+
+    const onClose = () => {
+        setModalIsOpen(false);
+    };
+
     const navigation = [
         {
             name: "Latest Updates",
@@ -269,7 +274,7 @@ const Home = () => {
                                     <Disclosure.Button
                                         key={item.name}
                                         as="a"
-                                        href={item.href}
+                                        onClick={item.onclick}
                                         className={classNames(
                                             item.current
                                                 ? "bg-gray-900 text-white"
@@ -457,7 +462,7 @@ const Home = () => {
                     <CreateTeam
                         darkMode={darkMode}
                         toggleDarkMode={toggleDarkMode}
-                        setModalIsOpen={setModalIsOpen}
+                        onClose={onClose}
                     />
                 </Modal>
             </div>

@@ -2,17 +2,24 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSun, faMoon, faEnvelope, faBullhorn, faTicketAlt, faCloudMoon, faHome, faTimes } from "@fortawesome/free-solid-svg-icons";
+import {
+    faSun,
+    faMoon,
+    faEnvelope,
+    faBullhorn,
+    faTicketAlt,
+    faCloudMoon,
+    faHome,
+    faTimes,
+} from "@fortawesome/free-solid-svg-icons";
 import custom_header from "../Header/header";
 import Modal from "react-modal";
 import TicketForm from "../CreateTickets/createtickets";
 
-
-
 const Announcements = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const params = useParams();
-    const navigate = useNavigate()
+    const navigate = useNavigate();
     const itemsPerPage = 5; // pagenation
     const [announcements, setAnnouncements] = useState([]);
     const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -93,6 +100,28 @@ const Announcements = () => {
                 type: "success",
             });
 
+            const token = localStorage.getItem("token");
+            const response = await axios.post(
+                `http://localhost:5000/announcements/`,
+                {
+                    title: announcementDetails.title,
+                    description: announcementDetails.description,
+                    serverId: params.id,
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+            console.log(response.data);
+
+            // add announcement to the list
+            setAnnouncements((prevAnnouncements) => [
+                ...prevAnnouncements,
+                response.data.newAnnouncement,
+            ]);
+
             // After successful creation, close the modal and reset form
             setModalIsOpen(false);
             setAnnouncementDetails({
@@ -108,8 +137,6 @@ const Announcements = () => {
             console.error("Error creating announcement: ", error);
         }
     };
-
-
 
     return (
         <div>
@@ -131,11 +158,20 @@ const Announcements = () => {
                     </div>
                 </div>
             </div> */}
-            {custom_header("This Server's Announcements", darkMode, toggleDarkMode, handleLogout, handleHomeClick)}
-
+            {custom_header(
+                "This Server's Announcements",
+                darkMode,
+                toggleDarkMode,
+                handleLogout,
+                handleHomeClick
+            )}
 
             {/* Content area */}
-            <div className={`bg-${darkMode ? 'gray-900' : 'white-800'} grid grid-cols-12 gap-6 h-screen`}>
+            <div
+                className={`bg-${
+                    darkMode ? "gray-900" : "white-800"
+                } grid grid-cols-12 gap-6 h-screen`}
+            >
                 {/* Left column for chat, announcements, and tickets */}
                 <div className="col-span-3 bg-gray-200">
                     <button
@@ -161,7 +197,13 @@ const Announcements = () => {
                 {/* Main content area */}
                 <div className="col-span-9">
                     <div className="flex justify-between items-center mb-4">
-                        <h2 className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-black'}`}>Announcements</h2>
+                        <h2
+                            className={`text-2xl font-bold ${
+                                darkMode ? "text-white" : "text-black"
+                            }`}
+                        >
+                            Announcements
+                        </h2>
                         <button
                             onClick={() => setModalIsOpen(true)}
                             className="bg-indigo-500 text-white px-4 py-2 rounded-md mr-4"
@@ -172,107 +214,137 @@ const Announcements = () => {
 
                     {/* Display Announcements */}
                     {announcements.map((announcement) => (
-                        <div key={announcement.id} className="mb-8 bg-white p-6 rounded-md shadow-md">
-                            <h3 className="text-xl font-bold mb-2">{announcement.title}</h3>
-                            <p className="text-gray-500 mb-2">{announcement.date}</p>
-                            <p className="text-gray-800">{announcement.description}</p>
-                            <p className="text-gray-500 mt-2">Created by: {announcement.createdBy.name}</p>
+                        <div
+                            key={announcement.id}
+                            className="mb-8 bg-white p-6 rounded-md shadow-md"
+                        >
+                            <h3 className="text-xl font-bold mb-2">
+                                {announcement.title}
+                            </h3>
+                            <p className="text-gray-500 mb-2">
+                                {announcement.date}
+                            </p>
+                            <p className="text-gray-800">
+                                {announcement.description}
+                            </p>
+                            <p className="text-gray-500 mt-2">
+                                Created by: {announcement.createdBy.name}
+                            </p>
                         </div>
                     ))}
 
                     {/* Pagination */}
                     <div className="flex justify-center mt-4">
-                        {Array.from({ length: Math.ceil(announcements.length / itemsPerPage) }, (_, index) => (
-                            <button
-                                key={index}
-                                onClick={() => paginate(index + 1)}
-                                className={`mx-1 px-3 py-2 rounded-md ${
-                                    currentPage === index + 1 ? "bg-blue-500 text-white" : "bg-gray-300 text-gray-700"
-                                }`}
-                            >
-                                {index + 1}
-                            </button>
-                        ))}
+                        {Array.from(
+                            {
+                                length: Math.ceil(
+                                    announcements.length / itemsPerPage
+                                ),
+                            },
+                            (_, index) => (
+                                <button
+                                    key={index}
+                                    onClick={() => paginate(index + 1)}
+                                    className={`mx-1 px-3 py-2 rounded-md ${
+                                        currentPage === index + 1
+                                            ? "bg-blue-500 text-white"
+                                            : "bg-gray-300 text-gray-700"
+                                    }`}
+                                >
+                                    {index + 1}
+                                </button>
+                            )
+                        )}
                     </div>
 
-
-
-                {/* Ticket Creation Modal */}
-            <Modal
-                isOpen={modalIsOpen}
-                onRequestClose={() => {
-                    setModalIsOpen(false);
-                    // Clear the message when the modal is closed
-                    setMessage({
-                        content: "",
-                        type: "",
-                    });
-                }}
-                contentLabel="Create Announcement Modal"
-            >
-                <div className="flex justify-between items-center">
-                    <h2 className="text-2xl font-bold mb-4">Create Announcement</h2>
-                    <button
-                        onClick={() => {
+                    {/* Ticket Creation Modal */}
+                    <Modal
+                        isOpen={modalIsOpen}
+                        onRequestClose={() => {
                             setModalIsOpen(false);
+                            // Clear the message when the modal is closed
                             setMessage({
                                 content: "",
                                 type: "",
                             });
                         }}
-                        className="text-gray-500 hover:text-gray-700 focus:outline-none"
+                        contentLabel="Create Announcement Modal"
                     >
-                        <FontAwesomeIcon icon={faTimes} className="text-xl" />
-                    </button>
+                        <div className="flex justify-between items-center">
+                            <h2 className="text-2xl font-bold mb-4">
+                                Create Announcement
+                            </h2>
+                            <button
+                                onClick={() => {
+                                    setModalIsOpen(false);
+                                    setMessage({
+                                        content: "",
+                                        type: "",
+                                    });
+                                }}
+                                className="text-gray-500 hover:text-gray-700 focus:outline-none"
+                            >
+                                <FontAwesomeIcon
+                                    icon={faTimes}
+                                    className="text-xl"
+                                />
+                            </button>
+                        </div>
+                        {message.content && (
+                            <div
+                                className={`mb-4 p-2 rounded-md ${
+                                    message.type === "success"
+                                        ? "bg-green-200 text-green-800"
+                                        : "bg-red-200 text-red-800"
+                                }`}
+                            >
+                                {message.content}
+                            </div>
+                        )}
+                        <form>
+                            <div className="mb-4">
+                                <label
+                                    className="block text-gray-700 text-sm font-bold mb-2"
+                                    htmlFor="title"
+                                >
+                                    Title
+                                </label>
+                                <input
+                                    type="text"
+                                    id="title"
+                                    name="title"
+                                    value={announcementDetails.title}
+                                    onChange={handleInputChange}
+                                    className="w-full p-2 border border-gray-300 rounded-md"
+                                />
+                            </div>
+                            <div className="mb-4">
+                                <label
+                                    className="block text-gray-700 text-sm font-bold mb-2"
+                                    htmlFor="description"
+                                >
+                                    Description
+                                </label>
+                                <textarea
+                                    id="description"
+                                    name="description"
+                                    value={announcementDetails.description}
+                                    onChange={handleInputChange}
+                                    className="w-full p-2 border border-gray-300 rounded-md"
+                                />
+                            </div>
+                            <button
+                                type="button"
+                                onClick={handleCreateAnnouncement}
+                                className="bg-indigo-500 text-white px-4 py-2 rounded-md"
+                            >
+                                Create Announcement
+                            </button>
+                        </form>
+                    </Modal>
                 </div>
-                {message.content && (
-                    <div
-                        className={`mb-4 p-2 rounded-md ${
-                            message.type === "success" ? "bg-green-200 text-green-800" : "bg-red-200 text-red-800"
-                        }`}
-                    >
-                        {message.content}
-                    </div>
-                )}
-                <form>
-                <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="title">
-                            Title
-                        </label>
-                        <input
-                            type="text"
-                            id="title"
-                            name="title"
-                            value={announcementDetails.title}
-                            onChange={handleInputChange}
-                            className="w-full p-2 border border-gray-300 rounded-md"
-                        />
-                    </div>
-                    <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="description">
-                            Description
-                        </label>
-                        <textarea
-                            id="description"
-                            name="description"
-                            value={announcementDetails.description}
-                            onChange={handleInputChange}
-                            className="w-full p-2 border border-gray-300 rounded-md"
-                        />
-                    </div>
-                    <button
-                        type="button"
-                        onClick={handleCreateAnnouncement}
-                        className="bg-indigo-500 text-white px-4 py-2 rounded-md"
-                    >
-                        Create Announcement
-                    </button>
-                </form>
-            </Modal>
+            </div>
         </div>
-    </div>
-</div>
-
     );
 };
 

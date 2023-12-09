@@ -38,7 +38,10 @@ exports.createAnnouncement = async (req, res) => {
                     server: serverId,
                 });
                 await newAnnouncement.save();
-                res.json({ message: "Announcement created successfully" });
+                res.json({
+                    message: "Announcement created successfully",
+                    newAnnouncement,
+                });
             } catch (err) {
                 res.status(500).json({ message: err });
             }
