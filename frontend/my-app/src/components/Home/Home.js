@@ -74,7 +74,7 @@ const Home = () => {
 
     const handleTicketPage = (serverId) => {
         console.log("sss", serverId);
-        // navigate(`/tickets/${serverId}`);
+        navigate(`/tickets/${serverId}`);
     };
 
     const handleAnnouncementsPage = (serverId) => {

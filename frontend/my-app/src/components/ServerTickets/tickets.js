@@ -24,6 +24,28 @@ const Tickets = () => {
         setSelectedTicket(ticket);
     };
 
+    const handleDeleteClick = async (ticket) => {
+        try {
+            const token = localStorage.getItem("token");
+            const response = await axios.delete(
+                `http://localhost:5000/ticket/${ticket._id}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+            console.log(response.data);
+            setTickets((prevTickets) =>
+                prevTickets.filter(
+                    (prevTicket) => prevTicket._id !== ticket._id
+                )
+            );
+        } catch (error) {
+            console.error("Error deleting ticket: ", error);
+        }
+    };
+
     const toggleDarkMode = () => {
         setDarkMode(!darkMode);
     };
@@ -216,14 +238,24 @@ const Tickets = () => {
                                     <p className="text-gray-500">
                                         Status: {ticket.status}
                                     </p>
-                                    <button
-                                        onClick={() =>
-                                            handleTicketClick(ticket)
-                                        }
-                                        className="mt-4 bg-indigo-500 text-white p-2 rounded-md hover:bg-indigo-600 focus:outline-none focus:ring focus:border-indigo-300"
-                                    >
-                                        Edit Status
-                                    </button>
+                                    <div className="flex space-x-4">
+                                        <button
+                                            onClick={() =>
+                                                handleTicketClick(ticket)
+                                            }
+                                            className="mt-4 bg-indigo-500 text-white p-2 rounded-md hover:bg-indigo-600 focus:outline-none focus:ring focus:border-indigo-300"
+                                        >
+                                            Edit Status
+                                        </button>
+                                        <button
+                                            onClick={() =>
+                                                handleDeleteClick(ticket)
+                                            }
+                                            className="mt-4 bg-red-500 text-white p-2 rounded-md hover:bg-red-600 focus:outline-none focus:ring focus:border-red-300"
+                                        >
+                                            Delete Ticket
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         ))}

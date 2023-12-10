@@ -138,6 +138,50 @@ const Announcements = () => {
         }
     };
 
+    const handleDeleteClick = async (announcement) => {
+        try {
+            // Simulate success, replace with actual API call
+            // For example purposes, always show a success message
+            setMessage({
+                content: "Announcement deleted successfully!",
+                type: "success",
+            });
+
+            const token = localStorage.getItem("token");
+            const response = await axios.delete(
+                `http://localhost:5000/announcements/${announcement._id}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+            console.log(response.data);
+
+            // remove announcement from list
+            setAnnouncements((prevAnnouncements) =>
+                prevAnnouncements.filter(
+                    (prevAnnouncement) =>
+                        prevAnnouncement._id !== announcement._id
+                )
+            );
+
+            // After successful creation, close the modal and reset form
+            setModalIsOpen(false);
+            setAnnouncementDetails({
+                title: "",
+                description: "",
+            });
+        } catch (error) {
+            // Simulate an error, replace with actual error handling
+            setMessage({
+                content: "Error deleting announcement. Please try again.",
+                type: "warning",
+            });
+            console.error("Error deleting announcement: ", error);
+        }
+    };
+
     return (
         <div>
             {/* Top header (black) */}
@@ -215,7 +259,7 @@ const Announcements = () => {
                     {/* Display Announcements */}
                     {announcements.map((announcement) => (
                         <div
-                            key={announcement.id}
+                            key={announcement._id}
                             className="mb-8 bg-white p-6 rounded-md shadow-md"
                         >
                             <h3 className="text-xl font-bold mb-2">
@@ -230,6 +274,12 @@ const Announcements = () => {
                             <p className="text-gray-500 mt-2">
                                 Created by: {announcement.createdBy.name}
                             </p>
+                            <button
+                                onClick={() => handleDeleteClick(announcement)}
+                                className="bg-red-500 text-white px-4 py-2 rounded-md mt-4"
+                            >
+                                Delete Announcement
+                            </button>
                         </div>
                     ))}
 
