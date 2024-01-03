@@ -12,6 +12,7 @@ import ServerTickets from "./components/ServerTickets/tickets";
 import CreateTickets from "./components/CreateTickets/createtickets"
 import ServerAnnouncements from "./components/ServerAnnouncements/announcements"
 import SeverChat from "./components/ServerChat/chat"
+import ManageMembers from "./components/ManageMembers/managemembers.js"
 
 
 function App() {
@@ -31,6 +32,7 @@ function App() {
                             <Route path="/chat/:id" element={<SeverChat />} />
                             <Route path="/announcements/:id" element={<ServerAnnouncements />} />
                             <Route path="/createticket" element={<CreateTickets />} />
+                            <Route path="/manageteam" element={<ManageMembers />} />
                         </Routes>
                     </BrowserRouter>
                 </div>

@@ -3,13 +3,6 @@ import { useNavigate, useParams } from "react-router";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-    faSun,
-    faMoon,
-    faEnvelope,
-    faBullhorn,
-    faTicketAlt,
-    faCloudMoon,
-    faHome,
     faTimes,
 } from "@fortawesome/free-solid-svg-icons";
 import custom_header from "../Header/header";
@@ -184,39 +177,18 @@ const Announcements = () => {
 
     return (
         <div>
-            {/* Top header (black) */}
-            {/* <div className={`bg-${darkMode ? 'gray-900' : 'white-800'} text-white p-4`}>
-                <div className="flex justify-between items-center">
-                    <h2 className={`text-lg font-bold ${darkMode ? 'text-white' : 'text-black'}`}>This Server's Announcements</h2>
-                    <div className="flex space-x-4">
-                        <button onClick={toggleDarkMode} className={`bg-indigo-500 px-4 py-2 rounded-md ${darkMode ? 'dark:bg-black-700' : ''}`}>
-                            <FontAwesomeIcon icon={darkMode ? faSun : faMoon} className="text-white" />
-                        </button>
-                        <button onClick={handleLogout} className={`bg-red-500 px-4 py-2 rounded-md ${darkMode ? 'dark:bg-red-600' : ''}`}>
-                            Logout
-                        </button>
-                        <button onClick={handleHomeClick} className={`bg-red-500 px-4 py-2 rounded-md ${darkMode ? 'dark:bg-red-600' : ''}`}>
-                            <FontAwesomeIcon icon={darkMode ? faHome:faHome} className="text-white" />
-                        </button>
-                        
-                    </div>
-                </div>
-            </div> */}
+
             {custom_header(
                 "This Server's Announcements",
-                darkMode,
-                toggleDarkMode,
                 handleLogout,
                 handleHomeClick
             )}
 
-            {/* Content area */}
             <div
                 className={`bg-${
-                    darkMode ? "gray-900" : "white-800"
+                    "gray-900" 
                 } grid grid-cols-12 gap-6 h-screen`}
             >
-                {/* Left column for chat, announcements, and tickets */}
                 <div className="col-span-3 bg-gray-200">
                     <button
                         onClick={handleAnnouncementsClick}
@@ -238,15 +210,13 @@ const Announcements = () => {
                     </button>
                 </div>
 
-                {/* Main content area */}
                 <div className="col-span-9">
                     <div className="flex justify-between items-center mb-4">
                         <h2
                             className={`text-2xl font-bold ${
-                                darkMode ? "text-white" : "text-black"
+                                "text-white"
                             }`}
                         >
-                            Announcements
                         </h2>
                         <button
                             onClick={() => setModalIsOpen(true)}
@@ -312,7 +282,6 @@ const Announcements = () => {
                         isOpen={modalIsOpen}
                         onRequestClose={() => {
                             setModalIsOpen(false);
-                            // Clear the message when the modal is closed
                             setMessage({
                                 content: "",
                                 type: "",

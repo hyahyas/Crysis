@@ -168,8 +168,6 @@ const Tickets = () => {
         <div>
             {custom_header(
                 "Tickets",
-                darkMode,
-                toggleDarkMode,
                 handleLogout,
                 handleHomeClick
             )}

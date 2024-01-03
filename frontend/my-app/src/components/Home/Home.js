@@ -16,9 +16,12 @@ import {
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import logo from "../Assets/crysis_logo.png";
+import usericon from "../Assets/userlogo.png"
 import custom_header from "../Header/header";
 import Modal from "react-modal";
 import CreateTeam from "../CreateTeam/createTeam";
+import { alignProperty } from "@mui/material/styles/cssUtils";
+import { CenterFocusStrong } from "@mui/icons-material";
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
@@ -28,11 +31,10 @@ const Home = () => {
     const navigate = useNavigate();
     const [teamsAdmin, setTeamsAdmin] = useState([]);
     const [teamsMember, setTeamsMember] = useState([]);
-    const [darkMode, setDarkMode] = useState(false);
+    // const [darkMode, setDarkMode] = useState(false);
     const [modalIsOpen, setModalIsOpen] = useState(false);
 
     useEffect(() => {
-        // Fetch data for teams
         const fetchData = async () => {
             try {
                 const token = localStorage.getItem("token");
@@ -77,6 +79,11 @@ const Home = () => {
         navigate(`/tickets/${serverId}`);
     };
 
+    const handleMembersPage = (serverId) => {
+        console.log("sss", serverId);
+        navigate(`/manageteam`);
+    };
+
     const handleAnnouncementsPage = (serverId) => {
         console.log("sss", serverId);
         navigate(`/announcements/${serverId}`);
@@ -95,21 +102,21 @@ const Home = () => {
         alert("Add member to server");
     };
 
-    const toggleDarkMode = () => {
-        setDarkMode(!darkMode);
-    };
+    // const toggleDarkMode = () => {
+    //     setDarkMode(!darkMode);
+    // };
 
     const onClose = () => {
         setModalIsOpen(false);
     };
 
     const navigation = [
-        {
-            name: "Latest Updates",
-            href: "#",
-            onclick: console.log("yo"),
-            current: true,
-        },
+        // {
+        //     name: "Latest Updates",
+        //     href: "#",
+        //     onclick: console.log("yo"),
+        //     current: true,
+        // },
         {
             name: "Create new team",
             href: "/newteam",
@@ -122,13 +129,13 @@ const Home = () => {
     return (
         <div
             className={`flex flex-col min-h-screen ${
-                darkMode ? "bg-gray-800 text-white" : "bg-white text-gray-900"
+                "bg-gray-800 text-white" 
             }`}
         >
             <Disclosure
                 as="nav"
                 className={`bg-${
-                    darkMode ? "gray-900" : "white-800"
+                    "gray-900"
                 } text-white p-4`}
             >
                 {({ open }) => (
@@ -162,8 +169,8 @@ const Home = () => {
                                             alt="Crysis"
                                         />
                                     </div>
-                                    <div className="hidden sm:ml-6 sm:block">
-                                        <div className="flex space-x-4">
+                                    <div className="hidden justify-end sm:ml-6 sm:block">
+                                        <div className="flex justify-middle space-x-4 ">
                                             {navigation.map((item) => (
                                                 <a
                                                     key={item.name}
@@ -172,7 +179,7 @@ const Home = () => {
                                                         item.current
                                                             ? "bg-gray-900 text-white"
                                                             : "text-gray-300 hover:bg-gray-700 hover:text-white",
-                                                        "rounded-md px-3 py-2 text-sm font-medium"
+                                                        " rounded-md px-3 py-2 text-sm font-medium "
                                                     )}
                                                     aria-current={
                                                         item.current
@@ -195,9 +202,9 @@ const Home = () => {
                                                     Open user menu
                                                 </span>
                                                 <img
-                                                    className="h-8 w-8 rounded-full"
-                                                    src={faUser}
-                                                    alt=""
+                                                    className="h-8 w-8 rounded-full bg-white"
+                                                    src={usericon}
+                                                    alt={faUser}
                                                 />
                                             </Menu.Button>
                                         </div>
@@ -227,23 +234,7 @@ const Home = () => {
                                                         </a>
                                                     )}
                                                 </Menu.Item>
-                                                <Menu.Item>
-                                                    {({ active }) => (
-                                                        <a
-                                                            onClick={
-                                                                toggleDarkMode
-                                                            }
-                                                            className={classNames(
-                                                                active
-                                                                    ? "bg-gray-100"
-                                                                    : "",
-                                                                "block px-4 py-2 text-sm text-gray-700"
-                                                            )}
-                                                        >
-                                                            Switch mode
-                                                        </a>
-                                                    )}
-                                                </Menu.Item>
+                                    
                                                 <Menu.Item>
                                                     {({ active }) => (
                                                         <a
@@ -299,15 +290,13 @@ const Home = () => {
 
             <div
                 className={`flex-grow p-4 bg-${
-                    darkMode ? "gray-900" : "white-800"
+                     "gray-900" 
                 }`}
             >
-                {/* Rest of your content */}
-                {/* Teams Admin */}
                 <div className="mb-8">
                     <h5
                         className={`text-lg font-bold ${
-                            darkMode ? "text-white" : "text-black"
+                             "text-white"
                         }`}
                     >
                         Your Servers (Admin)
@@ -317,29 +306,27 @@ const Home = () => {
                             <div
                                 key={team._id}
                                 className={`bg-white p-4 rounded-md shadow-md ${
-                                    darkMode ? "dark:bg-gray-300" : ""
+                                     "dark:bg-gray-500"
                                 } h-full`}
                             >
                                 <button
-                                    onClick={() => handleAddMember(team._id)}
+                                    onClick={() => handleMembersPage(team.id)}
                                     className={`bg-indigo-500 px-3 py-1.5 text-white rounded-md float-right ${
-                                        darkMode ? "dark:bg-gray-600" : ""
+                                         "dark:bg-gray-600" 
                                     }`}
                                 >
                                     <FontAwesomeIcon icon={faGear} />
                                 </button>
                                 <p
                                     className={`font-semibold ${
-                                        darkMode ? "text-black" : "text-black"
+                                     "text-white" 
                                     }`}
                                 >
                                     {team.name}
                                 </p>
 
                                 <p
-                                    className={`text-gray-500 mt-2 ${
-                                        darkMode ? "" : "text-black"
-                                    }`}
+                                
                                 >
                                     {team.description}
                                 </p>
@@ -349,7 +336,7 @@ const Home = () => {
                                             handleAnnouncementsPage(team._id)
                                         }
                                         className={`bg-indigo-500 px-3 py-1.5 text-white rounded-md ${
-                                            darkMode ? "dark:bg-gray-600" : ""
+                                            "dark:bg-gray-600"
                                         }`}
                                     >
                                         <FontAwesomeIcon icon={faBullhorn} />
@@ -357,7 +344,7 @@ const Home = () => {
                                     <button
                                         onClick={() => handleChatPage(team._id)}
                                         className={`bg-indigo-500 px-3 py-1.5 text-white rounded-md ${
-                                            darkMode ? "dark:bg-gray-600" : ""
+                                             "dark:bg-gray-600" 
                                         }`}
                                     >
                                         <FontAwesomeIcon icon={faEnvelope} />
@@ -367,7 +354,7 @@ const Home = () => {
                                             handleTicketPage(team._id)
                                         }
                                         className={`bg-indigo-500 px-3 py-1.5 text-white rounded-md ${
-                                            darkMode ? "dark:bg-gray-600" : ""
+                                             "dark:bg-gray-600" 
                                         }`}
                                     >
                                         <FontAwesomeIcon icon={faTicketAlt} />
@@ -382,7 +369,7 @@ const Home = () => {
                 <div>
                     <h5
                         className={`text-lg font-bold ${
-                            darkMode ? "text-white" : "text-black"
+                            "text-white" 
                         }`}
                     >
                         Joined Servers (Member)
@@ -392,27 +379,27 @@ const Home = () => {
                             <div
                                 key={team.id}
                                 className={`bg-white p-4 rounded-md shadow-md ${
-                                    darkMode ? "dark:bg-gray-700" : ""
+                                     "dark:bg-gray-700"
                                 } h-full`}
                             >
                                 <button
                                     onClick={() => handleAddMember(team._id)}
                                     className={`bg-indigo-500 px-3 py-1.5 text-white rounded-md float-right ${
-                                        darkMode ? "dark:bg-gray-600" : ""
+                                         "dark:bg-gray-600" 
                                     }`}
                                 >
                                     <FontAwesomeIcon icon={faGear} />
                                 </button>
                                 <p
                                     className={`font-semibold ${
-                                        darkMode ? "text-white" : "text-black"
+                                        "text-white" 
                                     }`}
                                 >
                                     {team.name}
                                 </p>
                                 <p
                                     className={`text-gray-500 mt-2 ${
-                                        darkMode ? "text-white" : "text-black"
+                                        "text-white" 
                                     }`}
                                 >
                                     {team.description}
@@ -423,7 +410,7 @@ const Home = () => {
                                             handleAnnouncementsPage(team._id)
                                         }
                                         className={`bg-indigo-500 px-3 py-1.5 text-white rounded-md ${
-                                            darkMode ? "dark:bg-gray-600" : ""
+                                             "dark:bg-gray-600"
                                         }`}
                                     >
                                         <FontAwesomeIcon icon={faBullhorn} />
@@ -431,7 +418,7 @@ const Home = () => {
                                     <button
                                         onClick={handleChatPage}
                                         className={`bg-indigo-500 px-3 py-1.5 text-white rounded-md ${
-                                            darkMode ? "dark:bg-gray-600" : ""
+                                            "dark:bg-gray-600"
                                         }`}
                                     >
                                         <FontAwesomeIcon icon={faEnvelope} />
@@ -439,7 +426,7 @@ const Home = () => {
                                     <button
                                         onClick={handleTicketPage}
                                         className={`bg-indigo-500 px-3 py-1.5 text-white rounded-md ${
-                                            darkMode ? "dark:bg-gray-600" : ""
+                                             "dark:bg-gray-600" 
                                         }`}
                                     >
                                         <FontAwesomeIcon icon={faTicketAlt} />
@@ -450,18 +437,16 @@ const Home = () => {
                     </div>
                 </div>
 
-                {/* Modal */}
                 <Modal
                     isOpen={modalIsOpen}
                     onRequestClose={() => setModalIsOpen(false)}
                     contentLabel="Create Team Modal"
-                    className={`max-w-md w-full bg-white p-4 rounded-md shadow-md ${
-                        darkMode ? "dark:bg-gray-700" : ""
+                    className={`max-w-md w-full bg-white p-4 rounded-md shadow-md justify-center item-center ${
+                        "dark:bg-gray-700" 
                     }`}
                 >
                     <CreateTeam
-                        darkMode={darkMode}
-                        toggleDarkMode={toggleDarkMode}
+                        // darkMode={darkMode}
                         onClose={onClose}
                     />
                 </Modal>

@@ -90,8 +90,6 @@ const Chats = () => {
             </div> */}
             {custom_header(
                 "This Server's Chat",
-                darkMode,
-                toggleDarkMode,
                 handleLogout,
                 handleHomeClick
             )}
