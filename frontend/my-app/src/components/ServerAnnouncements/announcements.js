@@ -2,9 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-    faTimes,
-} from "@fortawesome/free-solid-svg-icons";
+import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import custom_header from "../Header/header";
 import Modal from "react-modal";
 import TicketForm from "../CreateTickets/createtickets";
@@ -177,7 +175,6 @@ const Announcements = () => {
 
     return (
         <div>
-
             {custom_header(
                 "This Server's Announcements",
                 handleLogout,
@@ -185,9 +182,7 @@ const Announcements = () => {
             )}
 
             <div
-                className={`bg-${
-                    "gray-900" 
-                } grid grid-cols-12 gap-6 h-screen`}
+                className={`bg-${"gray-900"} grid grid-cols-12 gap-6 h-screen`}
             >
                 <div className="col-span-3 bg-gray-200">
                     <button
@@ -213,11 +208,8 @@ const Announcements = () => {
                 <div className="col-span-9">
                     <div className="flex justify-between items-center mb-4">
                         <h2
-                            className={`text-2xl font-bold ${
-                                "text-white"
-                            }`}
-                        >
-                        </h2>
+                            className={`text-2xl font-bold ${"text-white"}`}
+                        ></h2>
                         <button
                             onClick={() => setModalIsOpen(true)}
                             className="bg-indigo-500 text-white px-4 py-2 rounded-md mr-4"
@@ -293,7 +285,7 @@ const Announcements = () => {
                             <h2 className="text-2xl font-bold mb-4">
                                 Create Announcement
                             </h2>
-                            <button
+                            {/* <button
                                 onClick={() => {
                                     setModalIsOpen(false);
                                     setMessage({
@@ -307,7 +299,7 @@ const Announcements = () => {
                                     icon={faTimes}
                                     className="text-xl"
                                 />
-                            </button>
+                            </button> */}
                         </div>
                         {message.content && (
                             <div
@@ -355,9 +347,26 @@ const Announcements = () => {
                             <button
                                 type="button"
                                 onClick={handleCreateAnnouncement}
-                                className="bg-indigo-500 text-white px-4 py-2 rounded-md"
+                                className={`w-1/2 bg-indigo-500 text-white p-2 rounded-md hover:bg-indigo-600 focus:outline-none focus:ring focus:border-indigo-300 ${
+                                    darkMode ? "dark:bg-gray-600" : ""
+                                }`}
                             >
-                                Create Announcement
+                                Create Team
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setModalIsOpen(false);
+                                    setMessage({
+                                        content: "",
+                                        type: "",
+                                    });
+                                }}
+                                className={`w-1/2 bg-gray-300 text-gray-800 p-2 rounded-md hover:bg-gray-400 focus:outline-none focus:ring focus:border-indigo-300 ${
+                                    darkMode ? "dark:bg-gray-600" : ""
+                                }`}
+                            >
+                                Cancel
                             </button>
                         </form>
                     </Modal>

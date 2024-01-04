@@ -311,6 +311,74 @@ exports.updateMemberInServer = async (req, res) => {
     }
 };
 
+// Controller to add a member to the server
+exports.addMemberInServer = async (req, res) => {
+    logEndPoint("PATCH", "/server/:serverId/addMember");
+
+    // Check for validation errors
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
+    try {
+        const decoded = req.decoded;
+        const userId = decoded.id;
+        const serverId = req.params.serverId;
+
+        // Check if the user is an admin
+        const isAdmin = await checkUserIsAdmin(serverId, userId);
+        if (!isAdmin) {
+            return res
+                .status(403)
+                .json({ message: "Forbidden, user not an admin" });
+        }
+
+        // Find the server
+        const server = await Server.findById(serverId);
+        if (!server) {
+            return res.status(404).json({ error: "Server not found" });
+        }
+
+        // Find the user by email
+        const { email } = req.body;
+        const memberUser = await User.findOne({ email }).select("-password");
+
+        // If the user doesn't exist, return an error
+        if (!memberUser) {
+            return res.status(404).json({ error: "User not found" });
+        }
+
+        // Find the existing membership
+        const existingMembership = await Membership.findOne({
+            server: serverId,
+            member: memberUser._id,
+        });
+        if (existingMembership) {
+            return res.status(400).json({
+                error: "User is already a member of the server",
+            });
+        }
+
+        console.log(memberUser);
+        // Create a new membership
+        const membership = new Membership({
+            server: serverId,
+            member: memberUser,
+            isAdmin: false,
+        });
+
+        await membership.save();
+
+        res.json({
+            message: "Member added to the server successfully",
+            member: memberUser,
+        });
+    } catch (err) {
+        handleError(res, err);
+    }
+};
+
 // Controller to remove a member from the server
 exports.removeMemberFromServer = async (req, res) => {
     logEndPoint("PATCH", "/server/:serverId/removeMember");

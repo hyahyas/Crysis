@@ -10,6 +10,7 @@ const {
     updateMemberInServer,
     removeMemberFromServer,
     getUsersOfServer,
+    addMemberInServer,
 } = require("../controllers/server.controller");
 const { checkUserRole, extractToken } = require("../middleware/middleware");
 const e = require("express");
@@ -66,7 +67,7 @@ serverRoutes.patch(
     updateServer
 );
 
-// add member to server
+//
 // add admin to server/ promote member to admin
 // remove admin from server
 serverRoutes.patch(
@@ -78,6 +79,21 @@ serverRoutes.patch(
         body("isAdmin").isBoolean().optional(),
     ],
     updateMemberInServer
+);
+
+// add member to server
+serverRoutes.patch(
+    "/server/:serverId/addMember",
+    extractToken,
+    [
+        param("serverId").isMongoId().withMessage("Invalid server ID"),
+        body("email")
+            .notEmpty()
+            .withMessage("Email is required")
+            .isEmail()
+            .withMessage("Email is invalid"),
+    ],
+    addMemberInServer
 );
 
 // remove member from server
