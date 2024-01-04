@@ -12,6 +12,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import custom_header from "../Header/header";
 import axios from "axios";
+import { useSelector } from "react-redux";
 
 const Chats = () => {
     const [currentPage, setCurrentPage] = useState(1);
@@ -23,6 +24,8 @@ const Chats = () => {
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const [darkMode, setDarkMode] = useState(false);
     const [chat, setChat] = useState([]);
+
+    const serverName = useSelector((state) => state.serverName);
 
     useEffect(() => {
         const fetchChat = async () => {
@@ -88,18 +91,10 @@ const Chats = () => {
                     </div>
                 </div>
             </div> */}
-            {custom_header(
-                "This Server's Chat",
-                handleLogout,
-                handleHomeClick
-            )}
+            {custom_header(`${serverName}`, handleLogout, handleHomeClick)}
 
             {/* Content area */}
-            <div
-                className={`bg-${
-                    darkMode ? "gray-900" : "white-800"
-                } grid grid-cols-12 gap-6 h-screen`}
-            >
+            <div className={`bg-gray-900 grid grid-cols-12 gap-6 h-screen`}>
                 {/* Left column for chat, announcements, and tickets */}
                 <div className="col-span-3 bg-gray-200">
                     <button
@@ -124,11 +119,7 @@ const Chats = () => {
 
                 {/* Main content area */}
                 <div className="col-span-9">
-                    <h2
-                        className={`text-2xl font-bold mb-4 ${
-                            darkMode ? "text-white" : "text-black"
-                        }`}
-                    >
+                    <h2 className={`text-2xl font-bold mb-4 text-white`}>
                         Chat
                     </h2>
 

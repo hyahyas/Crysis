@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router";
 import axios from "axios";
 import custom_header from "../Header/header";
 import Modal from "react-modal";
+import { useSelector } from "react-redux";
 
 const Announcements = () => {
     const [currentPage, setCurrentPage] = useState(1);
@@ -11,6 +12,7 @@ const Announcements = () => {
     const itemsPerPage = 5; // pagenation
     const [announcements, setAnnouncements] = useState([]);
     const [modalIsOpen, setModalIsOpen] = useState(false);
+    const serverName = useSelector((state) => state.serverName);
 
     useEffect(() => {
         const fetchAnnouncements = async () => {
@@ -172,15 +174,9 @@ const Announcements = () => {
 
     return (
         <div>
-            {custom_header(
-                "This Server's Announcements",
-                handleLogout,
-                handleHomeClick
-            )}
+            {custom_header(`${serverName}`, handleLogout, handleHomeClick)}
 
-            <div
-                className={`bg-${"gray-900"} grid grid-cols-12 gap-6 h-screen`}
-            >
+            <div className={`bg-gray-900 grid grid-cols-12 gap-6 h-screen`}>
                 <div className="col-span-3 bg-gray-200">
                     <button
                         onClick={handleAnnouncementsClick}
@@ -204,9 +200,9 @@ const Announcements = () => {
 
                 <div className="col-span-9">
                     <div className="flex justify-between items-center mb-4">
-                        <h2
-                            className={`text-2xl font-bold ${"text-white"}`}
-                        ></h2>
+                        <h2 className={`text-2xl font-bold text-white`}>
+                            Announcements
+                        </h2>
                         <button
                             onClick={() => setModalIsOpen(true)}
                             className="bg-indigo-500 text-white px-4 py-2 rounded-md mr-4"
@@ -224,14 +220,21 @@ const Announcements = () => {
                             <h3 className="text-xl font-bold mb-2">
                                 {announcement.title}
                             </h3>
-                            <p className="text-gray-500 mb-2">
-                                {announcement.date}
+                            <p className="text-gray-500">
+                                {new Date(announcement.date).toLocaleDateString(
+                                    "en-US",
+                                    {
+                                        year: "numeric",
+                                        month: "long",
+                                        day: "numeric",
+                                    }
+                                )}
                             </p>
-                            <p className="text-gray-800">
-                                {announcement.description}
-                            </p>
-                            <p className="text-gray-500 mt-2">
+                            <p className="text-gray-500">
                                 Created by: {announcement.createdBy.name}
+                            </p>
+                            <p className="text-gray-800 mt-2 mb-4">
+                                Description: {announcement.description}
                             </p>
                             <button
                                 onClick={() => handleDeleteClick(announcement)}
@@ -344,9 +347,7 @@ const Announcements = () => {
                             <button
                                 type="button"
                                 onClick={handleCreateAnnouncement}
-                                className={`w-1/2 bg-indigo-500 text-white p-2 rounded-md hover:bg-indigo-600 focus:outline-none focus:ring focus:border-indigo-300 ${
-                                    darkMode ? "dark:bg-gray-600" : ""
-                                }`}
+                                className={`w-1/2 bg-indigo-500 text-white p-2 rounded-md hover:bg-indigo-600 focus:outline-none focus:ring focus:border-indigo-300 dark:bg-gray-600`}
                             >
                                 Create Team
                             </button>

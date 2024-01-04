@@ -24,6 +24,8 @@ const MemberAdminManagement = () => {
     const navigate = useNavigate();
     const params = useParams();
 
+    const [userNotFound, setUserNotFound] = useState(false);
+
     const [anchorEl, setAnchorEl] = useState(null);
     const [selectedMember, setSelectedMember] = useState(null);
 
@@ -96,35 +98,50 @@ const MemberAdminManagement = () => {
 
     const handleAddMember = async (e) => {
         e.preventDefault();
-
-        const response = await axios.patch(
-            `http://localhost:5000/server/${params.id}/addMember`,
-            {
-                email,
-            },
-            {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+        try {
+            const response = await axios.patch(
+                `http://localhost:5000/server/${params.id}/addMember`,
+                {
+                    email,
                 },
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem(
+                            "token"
+                        )}`,
+                    },
+                }
+            );
+
+            console.log(response.data);
+
+            setMembers((prevMembers) => [
+                ...prevMembers,
+                {
+                    member: {
+                        _id: response.data.member._id,
+                        name: response.data.member.name,
+                    },
+                    isAdmin: false,
+                },
+            ]);
+
+            setModalIsOpen(false);
+            setUserNotFound(false);
+        } catch (error) {
+            if (error.response && error.response.status === 404) {
+                // User not found
+                console.error("User with the provided email not found.");
+                setUserNotFound(true);
+            } else {
+                console.error(
+                    "An error occurred while adding the member:",
+                    error.message
+                );
+                // Handle other errors
             }
-        );
-
-        console.log(response.data);
-
-        setMembers((prevMembers) => [
-            ...prevMembers,
-            {
-                member: {
-                    _id: response.data.member._id,
-                    name: response.data.member.name,
-                },
-                isAdmin: false,
-            },
-        ]);
-
-        setModalIsOpen(false);
+        }
     };
-
     const handleHomeClick = () => {
         navigate("/home");
     };
@@ -175,7 +192,7 @@ const MemberAdminManagement = () => {
                             <TableRow>
                                 {/* <TableCell>ID</TableCell> */}
                                 <TableCell>Name</TableCell>
-                                <TableCell>Role</TableCell>
+                                <TableCell>Admin Access</TableCell>
                                 <TableCell>Actions</TableCell>
                             </TableRow>
                         </TableHead>
@@ -259,6 +276,11 @@ const MemberAdminManagement = () => {
                                 required
                             />
                         </div>
+                        {userNotFound && (
+                            <p style={{ color: "red" }}>
+                                User with the provided email not found.
+                            </p>
+                        )}
                         <button
                             type="submit"
                             className={`w-1/2 bg-indigo-500 text-white p-2 rounded-md hover:bg-indigo-600 focus:outline-none focus:ring focus:border-indigo-300 ${

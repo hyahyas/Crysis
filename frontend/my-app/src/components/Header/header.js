@@ -10,9 +10,9 @@ const custom_header = (heading, handleLogout, handleHomeClick) => {
             <div className={`bg-${"gray-900"} text-white p-4`}>
                 <div className="flex justify-between items-center">
                     <img className="h-12 w-auto" src={logo} alt="Crysis" />
-                    <h2 className={`text-lg font-bold ${"text-white"}`}>
+                    <h1 className={`text-2xl font-bold ${"text-white"}`}>
                         {heading}
-                    </h2>
+                    </h1>
                     <div className="flex space-x-4">
                         {/* <button
                                 onClick={()=>alert("This feature is not available yet")}

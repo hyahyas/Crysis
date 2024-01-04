@@ -6,6 +6,7 @@ import custom_header from "../Header/header";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSun, faMoon, faHome } from "@fortawesome/free-solid-svg-icons";
 import TicketForm from "../CreateTickets/createtickets";
+import { useSelector } from "react-redux";
 
 const Tickets = () => {
     const params = useParams();
@@ -16,6 +17,7 @@ const Tickets = () => {
     const [darkMode, setDarkMode] = useState(false);
     const [selectedTicket, setSelectedTicket] = useState(null);
     const [newStatus, setNewStatus] = useState("");
+    const serverName = useSelector((state) => state.serverName);
 
     const handleTicketClick = (ticket) => {
         setSelectedTicket(ticket);
@@ -155,12 +157,10 @@ const Tickets = () => {
 
     return (
         <div>
-            {custom_header("Tickets", handleLogout, handleHomeClick)}
+            {custom_header(`${serverName}`, handleLogout, handleHomeClick)}
 
             <div
-                className={`bg-${
-                    darkMode ? "gray-900" : "white-800"
-                } grid grid-cols-12 gap-6 h-screen`}
+                className={`bg-${"gray-900"} grid grid-cols-12 gap-6 h-screen`}
             >
                 <div className="col-span-3 bg-gray-200">
                     <button
@@ -186,11 +186,7 @@ const Tickets = () => {
                 {/* Main Content */}
                 <div className="col-span-9">
                     <div className="flex justify-between items-center mb-4">
-                        <h2
-                            className={`text-2xl font-bold ${
-                                darkMode ? "text-white" : "text-black"
-                            }`}
-                        >
+                        <h2 className={`text-2xl font-bold text-white`}>
                             Tickets
                         </h2>
                         <button

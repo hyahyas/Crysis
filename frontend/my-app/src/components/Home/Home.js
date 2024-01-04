@@ -15,12 +15,15 @@ import logo from "../Assets/crysis_logo.png";
 import usericon from "../Assets/userlogo.png";
 import Modal from "react-modal";
 import CreateTeam from "../CreateTeam/createTeam";
+import { setServerName } from "../../redux/serverActions";
+import { useDispatch } from "react-redux";
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
 }
 
 const Home = () => {
+    const dispatch = useDispatch();
     const navigate = useNavigate();
     const [teamsAdmin, setTeamsAdmin] = useState([]);
     const [teamsMember, setTeamsMember] = useState([]);
@@ -76,8 +79,9 @@ const Home = () => {
         navigate(`/manageteam/${serverId}`);
     };
 
-    const handleAnnouncementsPage = (serverId) => {
+    const handleAnnouncementsPage = (serverId, serverName) => {
         console.log("sss", serverId);
+        dispatch(setServerName(serverName));
         navigate(`/announcements/${serverId}`);
     };
 
@@ -164,7 +168,7 @@ const Home = () => {
                                                         item.current
                                                             ? "bg-gray-900 text-white"
                                                             : "text-gray-300 hover:bg-gray-700 hover:text-white",
-                                                        " rounded-md px-3 py-2 text-sm font-medium "
+                                                        " rounded-md px-3 py-2 text-lg font-medium "
                                                     )}
                                                     aria-current={
                                                         item.current
@@ -301,21 +305,29 @@ const Home = () => {
                                 <div className="mt-4 flex justify-between">
                                     <button
                                         onClick={() =>
-                                            handleAnnouncementsPage(team._id)
+                                            handleAnnouncementsPage(
+                                                team._id,
+                                                team.name
+                                            )
                                         }
                                         className={`bg-indigo-500 px-3 py-1.5 text-white rounded-md ${"dark:bg-gray-600"}`}
                                     >
                                         <FontAwesomeIcon icon={faBullhorn} />
                                     </button>
                                     <button
-                                        onClick={() => handleChatPage(team._id)}
+                                        onClick={() =>
+                                            handleChatPage(team._id, team.name)
+                                        }
                                         className={`bg-indigo-500 px-3 py-1.5 text-white rounded-md ${"dark:bg-gray-600"}`}
                                     >
                                         <FontAwesomeIcon icon={faEnvelope} />
                                     </button>
                                     <button
                                         onClick={() =>
-                                            handleTicketPage(team._id)
+                                            handleTicketPage(
+                                                team._id,
+                                                team.name
+                                            )
                                         }
                                         className={`bg-indigo-500 px-3 py-1.5 text-white rounded-md ${"dark:bg-gray-600"}`}
                                     >
@@ -355,20 +367,30 @@ const Home = () => {
                                 <div className="mt-4 flex justify-between">
                                     <button
                                         onClick={() =>
-                                            handleAnnouncementsPage(team._id)
+                                            handleAnnouncementsPage(
+                                                team._id,
+                                                team.name
+                                            )
                                         }
                                         className={`bg-indigo-500 px-3 py-1.5 text-white rounded-md ${"dark:bg-gray-600"}`}
                                     >
                                         <FontAwesomeIcon icon={faBullhorn} />
                                     </button>
                                     <button
-                                        onClick={handleChatPage}
+                                        onClick={() => {
+                                            handleChatPage(team._id, team.name);
+                                        }}
                                         className={`bg-indigo-500 px-3 py-1.5 text-white rounded-md ${"dark:bg-gray-600"}`}
                                     >
                                         <FontAwesomeIcon icon={faEnvelope} />
                                     </button>
                                     <button
-                                        onClick={handleTicketPage}
+                                        onClick={() => {
+                                            handleTicketPage(
+                                                team._id,
+                                                team.name
+                                            );
+                                        }}
                                         className={`bg-indigo-500 px-3 py-1.5 text-white rounded-md ${"dark:bg-gray-600"}`}
                                     >
                                         <FontAwesomeIcon icon={faTicketAlt} />
