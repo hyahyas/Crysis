@@ -128,9 +128,6 @@ const MemberAdminManagement = () => {
     const handleHomeClick = () => {
         navigate("/home");
     };
-    const toggleDarkMode = () => {
-        setDarkMode(!darkMode);
-    };
     const handleLogout = () => {
         localStorage.removeItem("token");
         navigate("/");
@@ -159,14 +156,14 @@ const MemberAdminManagement = () => {
     return (
         <>
             {custom_header(
-                "Manage Members of XYZ Server",
+                `Manage members of this server`,
                 handleLogout,
                 handleHomeClick
             )}
-            <div className="flex justify-between items-center right">
+            <div className="flex-end justify-between items-center p-4">
                 <button
                     onClick={() => setModalIsOpen(true)}
-                    className={`bg-indigo-500 px-3 py-1.5 text-white rounded-md float-right ${"dark:bg-gray-600"}`}
+                    className={`bg-indigo-500 px-3 py-1.5 text-white rounded-md ${"dark:bg-gray-600"}`}
                 >
                     <FontAwesomeIcon icon={faUserPlus} />
                 </button>

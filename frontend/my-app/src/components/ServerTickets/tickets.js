@@ -12,13 +12,10 @@ const Tickets = () => {
     const [tickets, setTickets] = useState([]);
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [modalIsOpenstatus, setModalIsOpenstatus] = useState(false);
-    const [modalIsOpenAddMember, setModalIsOpenAddMember] = useState(false); // New state for Add Member modal
     const navigate = useNavigate();
     const [darkMode, setDarkMode] = useState(false);
     const [selectedTicket, setSelectedTicket] = useState(null);
     const [newStatus, setNewStatus] = useState("");
-    const [newAssignee, setNewAssignee] = useState("");
-    const [newMemberEmail, setNewMemberEmail] = useState(""); // New state for handling new member email
 
     const handleTicketClick = (ticket) => {
         setSelectedTicket(ticket);
@@ -83,15 +80,7 @@ const Tickets = () => {
     const openModalstatus = () => {
         setModalIsOpenstatus(true);
     };
-
-    const closeModalstatus = () => {
-        setModalIsOpenstatus(false);
-    };
     const [selectedTab, setSelectedTab] = useState("tickets");
-
-    const switchTab = (tab) => {
-        setSelectedTab(tab);
-    };
 
     const handleChat = () => {
         navigate(`/chat/${params.id}`);
@@ -166,11 +155,7 @@ const Tickets = () => {
 
     return (
         <div>
-            {custom_header(
-                "Tickets",
-                handleLogout,
-                handleHomeClick
-            )}
+            {custom_header("Tickets", handleLogout, handleHomeClick)}
 
             <div
                 className={`bg-${

@@ -3,25 +3,18 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-    faSun,
-    faMoon,
     faUser,
     faEnvelope,
     faBullhorn,
     faTicketAlt,
-    faUserPlus,
     faGear,
-    faCloudMoon,
 } from "@fortawesome/free-solid-svg-icons";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
-import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import logo from "../Assets/crysis_logo.png";
 import usericon from "../Assets/userlogo.png";
-import custom_header from "../Header/header";
 import Modal from "react-modal";
 import CreateTeam from "../CreateTeam/createTeam";
-import { alignProperty } from "@mui/material/styles/cssUtils";
-import { CenterFocusStrong } from "@mui/icons-material";
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
@@ -31,7 +24,6 @@ const Home = () => {
     const navigate = useNavigate();
     const [teamsAdmin, setTeamsAdmin] = useState([]);
     const [teamsMember, setTeamsMember] = useState([]);
-    // const [darkMode, setDarkMode] = useState(false);
     const [modalIsOpen, setModalIsOpen] = useState(false);
 
     useEffect(() => {
@@ -213,9 +205,11 @@ const Home = () => {
                                                 <Menu.Item>
                                                     {({ active }) => (
                                                         <a
-                                                            onClick={console.log(
-                                                                "Profile clicked"
-                                                            )}
+                                                            onClick={() => {
+                                                                console.log(
+                                                                    "Profile clicked"
+                                                                );
+                                                            }}
                                                             className={classNames(
                                                                 active
                                                                     ? "bg-gray-100"
@@ -278,9 +272,6 @@ const Home = () => {
                 )}
             </Disclosure>
 
-            {/* Header */}
-            {/* {custom_header(`Welcome user, this is your home page`, darkMode, toggleDarkMode, handleLogout, handleHomeClick)} */}
-
             <div className={`flex-grow p-4 bg-${"gray-900"}`}>
                 <div className="mb-8">
                     <h5 className={`text-lg font-bold ${"text-white"}`}>
@@ -298,11 +289,15 @@ const Home = () => {
                                 >
                                     <FontAwesomeIcon icon={faGear} />
                                 </button>
-                                <p className={`font-semibold ${"text-white"}`}>
+                                <p
+                                    className={`font-semibold ${"text-gray-900"}`}
+                                >
                                     {team.name}
                                 </p>
 
-                                <p>{team.description}</p>
+                                <p className="text-gray-500 mt-2 pr-4">
+                                    {team.description}
+                                </p>
                                 <div className="mt-4 flex justify-between">
                                     <button
                                         onClick={() =>
@@ -340,7 +335,7 @@ const Home = () => {
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                         {teamsMember.map((team) => (
                             <div
-                                key={team.id}
+                                key={team._id}
                                 className={`bg-white p-4 rounded-md shadow-md ${"dark:bg-gray-700"} h-full`}
                             >
                                 {/* <button
@@ -349,12 +344,12 @@ const Home = () => {
                                 >
                                     <FontAwesomeIcon icon={faGear} />
                                 </button> */}
-                                <p className={`font-semibold ${"text-white"}`}>
+                                <p
+                                    className={`font-semibold ${"text-gray-900"}`}
+                                >
                                     {team.name}
                                 </p>
-                                <p
-                                    className={`text-gray-500 mt-2 ${"text-white"}`}
-                                >
+                                <p className={`text-gray-500 mt-2 pr-4`}>
                                     {team.description}
                                 </p>
                                 <div className="mt-4 flex justify-between">
@@ -388,7 +383,7 @@ const Home = () => {
                     isOpen={modalIsOpen}
                     onRequestClose={() => setModalIsOpen(false)}
                     contentLabel="Create Team Modal"
-                    className={`max-w-md w-full bg-white p-4 rounded-md shadow-md justify-center item-center ${"dark:bg-gray-700"}`}
+                    // className={`max-w-md w-full bg-white p-4 rounded-md shadow-md justify-center item-center ${"dark:bg-gray-700"}`}
                 >
                     <CreateTeam
                         // darkMode={darkMode}

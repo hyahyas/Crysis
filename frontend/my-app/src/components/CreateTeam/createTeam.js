@@ -143,7 +143,7 @@ const CreateTeam = ({ onClose, darkMode, toggleDarkMode }) => {
         //     }`}
         // >
 
-        <div>
+        <div className="p-4">
             <h2
                 className={`text-2xl font-bold mb-4 ${
                     darkMode ? "text-white" : "text-gray-900"
@@ -199,8 +199,7 @@ const CreateTeam = ({ onClose, darkMode, toggleDarkMode }) => {
 
                 <div className="flex justify-between">
                     <button
-                        type="button"
-                        onClick={handleCreateTeam}
+                        type="submit"
                         className={`w-1/2 bg-indigo-500 text-white p-2 rounded-md hover:bg-indigo-600 focus:outline-none focus:ring focus:border-indigo-300 ${
                             darkMode ? "dark:bg-gray-600" : ""
                         }`}

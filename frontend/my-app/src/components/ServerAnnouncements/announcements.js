@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import axios from "axios";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import custom_header from "../Header/header";
 import Modal from "react-modal";
-import TicketForm from "../CreateTickets/createtickets";
 
 const Announcements = () => {
     const [currentPage, setCurrentPage] = useState(1);

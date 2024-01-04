@@ -1,12 +1,7 @@
 import React from "react";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-    faSun,
-    faMoon,
-    faHome,
-    faUserPlus,
-} from "@fortawesome/free-solid-svg-icons";
+import { faHome } from "@fortawesome/free-solid-svg-icons";
 import logo from "../Assets/crysis_logo.png";
 
 const custom_header = (heading, handleLogout, handleHomeClick) => {
