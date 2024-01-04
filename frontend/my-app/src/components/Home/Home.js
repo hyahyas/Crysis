@@ -16,7 +16,7 @@ import {
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import logo from "../Assets/crysis_logo.png";
-import usericon from "../Assets/userlogo.png"
+import usericon from "../Assets/userlogo.png";
 import custom_header from "../Header/header";
 import Modal from "react-modal";
 import CreateTeam from "../CreateTeam/createTeam";
@@ -81,7 +81,7 @@ const Home = () => {
 
     const handleMembersPage = (serverId) => {
         console.log("sss", serverId);
-        navigate(`/manageteam`);
+        navigate(`/manageteam/${serverId}`);
     };
 
     const handleAnnouncementsPage = (serverId) => {
@@ -128,16 +128,9 @@ const Home = () => {
     ];
     return (
         <div
-            className={`flex flex-col min-h-screen ${
-                "bg-gray-800 text-white" 
-            }`}
+            className={`flex flex-col min-h-screen ${"bg-gray-800 text-white"}`}
         >
-            <Disclosure
-                as="nav"
-                className={`bg-${
-                    "gray-900"
-                } text-white p-4`}
-            >
+            <Disclosure as="nav" className={`bg-${"gray-900"} text-white p-4`}>
                 {({ open }) => (
                     <>
                         <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -234,7 +227,7 @@ const Home = () => {
                                                         </a>
                                                     )}
                                                 </Menu.Item>
-                                    
+
                                                 <Menu.Item>
                                                     {({ active }) => (
                                                         <a
@@ -288,64 +281,40 @@ const Home = () => {
             {/* Header */}
             {/* {custom_header(`Welcome user, this is your home page`, darkMode, toggleDarkMode, handleLogout, handleHomeClick)} */}
 
-            <div
-                className={`flex-grow p-4 bg-${
-                     "gray-900" 
-                }`}
-            >
+            <div className={`flex-grow p-4 bg-${"gray-900"}`}>
                 <div className="mb-8">
-                    <h5
-                        className={`text-lg font-bold ${
-                             "text-white"
-                        }`}
-                    >
+                    <h5 className={`text-lg font-bold ${"text-white"}`}>
                         Your Servers (Admin)
                     </h5>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                         {teamsAdmin.map((team) => (
                             <div
                                 key={team._id}
-                                className={`bg-white p-4 rounded-md shadow-md ${
-                                     "dark:bg-gray-500"
-                                } h-full`}
+                                className={`bg-white p-4 rounded-md shadow-md ${"dark:bg-gray-500"} h-full`}
                             >
                                 <button
-                                    onClick={() => handleMembersPage(team.id)}
-                                    className={`bg-indigo-500 px-3 py-1.5 text-white rounded-md float-right ${
-                                         "dark:bg-gray-600" 
-                                    }`}
+                                    onClick={() => handleMembersPage(team._id)}
+                                    className={`bg-indigo-500 px-3 py-1.5 text-white rounded-md float-right ${"dark:bg-gray-600"}`}
                                 >
                                     <FontAwesomeIcon icon={faGear} />
                                 </button>
-                                <p
-                                    className={`font-semibold ${
-                                     "text-white" 
-                                    }`}
-                                >
+                                <p className={`font-semibold ${"text-white"}`}>
                                     {team.name}
                                 </p>
 
-                                <p
-                                
-                                >
-                                    {team.description}
-                                </p>
+                                <p>{team.description}</p>
                                 <div className="mt-4 flex justify-between">
                                     <button
                                         onClick={() =>
                                             handleAnnouncementsPage(team._id)
                                         }
-                                        className={`bg-indigo-500 px-3 py-1.5 text-white rounded-md ${
-                                            "dark:bg-gray-600"
-                                        }`}
+                                        className={`bg-indigo-500 px-3 py-1.5 text-white rounded-md ${"dark:bg-gray-600"}`}
                                     >
                                         <FontAwesomeIcon icon={faBullhorn} />
                                     </button>
                                     <button
                                         onClick={() => handleChatPage(team._id)}
-                                        className={`bg-indigo-500 px-3 py-1.5 text-white rounded-md ${
-                                             "dark:bg-gray-600" 
-                                        }`}
+                                        className={`bg-indigo-500 px-3 py-1.5 text-white rounded-md ${"dark:bg-gray-600"}`}
                                     >
                                         <FontAwesomeIcon icon={faEnvelope} />
                                     </button>
@@ -353,9 +322,7 @@ const Home = () => {
                                         onClick={() =>
                                             handleTicketPage(team._id)
                                         }
-                                        className={`bg-indigo-500 px-3 py-1.5 text-white rounded-md ${
-                                             "dark:bg-gray-600" 
-                                        }`}
+                                        className={`bg-indigo-500 px-3 py-1.5 text-white rounded-md ${"dark:bg-gray-600"}`}
                                     >
                                         <FontAwesomeIcon icon={faTicketAlt} />
                                     </button>
@@ -367,40 +334,26 @@ const Home = () => {
 
                 {/* Teams Member */}
                 <div>
-                    <h5
-                        className={`text-lg font-bold ${
-                            "text-white" 
-                        }`}
-                    >
+                    <h5 className={`text-lg font-bold ${"text-white"}`}>
                         Joined Servers (Member)
                     </h5>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                         {teamsMember.map((team) => (
                             <div
                                 key={team.id}
-                                className={`bg-white p-4 rounded-md shadow-md ${
-                                     "dark:bg-gray-700"
-                                } h-full`}
+                                className={`bg-white p-4 rounded-md shadow-md ${"dark:bg-gray-700"} h-full`}
                             >
-                                <button
-                                    onClick={() => handleAddMember(team._id)}
-                                    className={`bg-indigo-500 px-3 py-1.5 text-white rounded-md float-right ${
-                                         "dark:bg-gray-600" 
-                                    }`}
+                                {/* <button
+                                    onClick={() => handleMembersPage(team._id)}
+                                    className={`bg-indigo-500 px-3 py-1.5 text-white rounded-md float-right ${"dark:bg-gray-600"}`}
                                 >
                                     <FontAwesomeIcon icon={faGear} />
-                                </button>
-                                <p
-                                    className={`font-semibold ${
-                                        "text-white" 
-                                    }`}
-                                >
+                                </button> */}
+                                <p className={`font-semibold ${"text-white"}`}>
                                     {team.name}
                                 </p>
                                 <p
-                                    className={`text-gray-500 mt-2 ${
-                                        "text-white" 
-                                    }`}
+                                    className={`text-gray-500 mt-2 ${"text-white"}`}
                                 >
                                     {team.description}
                                 </p>
@@ -409,25 +362,19 @@ const Home = () => {
                                         onClick={() =>
                                             handleAnnouncementsPage(team._id)
                                         }
-                                        className={`bg-indigo-500 px-3 py-1.5 text-white rounded-md ${
-                                             "dark:bg-gray-600"
-                                        }`}
+                                        className={`bg-indigo-500 px-3 py-1.5 text-white rounded-md ${"dark:bg-gray-600"}`}
                                     >
                                         <FontAwesomeIcon icon={faBullhorn} />
                                     </button>
                                     <button
                                         onClick={handleChatPage}
-                                        className={`bg-indigo-500 px-3 py-1.5 text-white rounded-md ${
-                                            "dark:bg-gray-600"
-                                        }`}
+                                        className={`bg-indigo-500 px-3 py-1.5 text-white rounded-md ${"dark:bg-gray-600"}`}
                                     >
                                         <FontAwesomeIcon icon={faEnvelope} />
                                     </button>
                                     <button
                                         onClick={handleTicketPage}
-                                        className={`bg-indigo-500 px-3 py-1.5 text-white rounded-md ${
-                                             "dark:bg-gray-600" 
-                                        }`}
+                                        className={`bg-indigo-500 px-3 py-1.5 text-white rounded-md ${"dark:bg-gray-600"}`}
                                     >
                                         <FontAwesomeIcon icon={faTicketAlt} />
                                     </button>
@@ -441,9 +388,7 @@ const Home = () => {
                     isOpen={modalIsOpen}
                     onRequestClose={() => setModalIsOpen(false)}
                     contentLabel="Create Team Modal"
-                    className={`max-w-md w-full bg-white p-4 rounded-md shadow-md justify-center item-center ${
-                        "dark:bg-gray-700" 
-                    }`}
+                    className={`max-w-md w-full bg-white p-4 rounded-md shadow-md justify-center item-center ${"dark:bg-gray-700"}`}
                 >
                     <CreateTeam
                         // darkMode={darkMode}

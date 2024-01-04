@@ -9,6 +9,7 @@ const {
     getMyServers,
     updateMemberInServer,
     removeMemberFromServer,
+    getUsersOfServer,
 } = require("../controllers/server.controller");
 const { checkUserRole, extractToken } = require("../middleware/middleware");
 const e = require("express");
@@ -46,6 +47,14 @@ serverRoutes.get(
     getServerById
 );
 
+// Get users of a server
+serverRoutes.get(
+    "/server/:serverId/getUsers",
+    extractToken,
+    [param("serverId").isMongoId().withMessage("Invalid server ID")],
+    getUsersOfServer
+);
+
 // Update a server by ID
 serverRoutes.patch(
     "/server/:serverId",
@@ -65,7 +74,7 @@ serverRoutes.patch(
     extractToken,
     [
         param("serverId").isMongoId().withMessage("Invalid server ID"),
-        body("email").notEmpty().isEmail().withMessage("Invalid email format"),
+        body("member").notEmpty().withMessage("Member ID is required"),
         body("isAdmin").isBoolean().optional(),
     ],
     updateMemberInServer
@@ -77,7 +86,7 @@ serverRoutes.patch(
     extractToken,
     [
         param("serverId").isMongoId().withMessage("Invalid server ID"),
-        body("email").notEmpty().isEmail().withMessage("Invalid email format"),
+        body("member").notEmpty().withMessage("Member ID is required"),
     ],
     removeMemberFromServer
 );

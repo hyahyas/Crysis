@@ -138,6 +138,30 @@ exports.getServerById = async (req, res) => {
     }
 };
 
+// Controller to get all users of a server
+exports.getUsersOfServer = async (req, res) => {
+    logEndPoint("GET", "/server/:serverId/getUsers");
+
+    try {
+        const serverId = req.params.serverId;
+        const userId = req.decoded.id;
+
+        const memberships = await Membership.find({
+            server: serverId,
+        })
+            .populate("member", "name")
+            .populate("isAdmin");
+
+        if (!memberships) {
+            return res.status(404).json({ error: "Server not found" });
+        }
+
+        return res.json(memberships);
+    } catch (err) {
+        handleError(res, err);
+    }
+};
+
 // Controller to update a server by ID
 exports.updateServer = async (req, res) => {
     logEndPoint("PUT", "/updateServer/:serverId");
@@ -238,11 +262,12 @@ exports.updateMemberInServer = async (req, res) => {
         }
 
         // Find the user by email
-        const { email, admin } = req.body;
-        console.log(email);
-        const memberUser = await User.findOne({ email }).select("-password");
+        const { member, admin } = req.body;
+        console.log(member);
+        const memberUser = await User.findById(member).select("-password");
+
         //console.log(email)
-        //console.log(memberUser)
+        console.log(memberUser);
         // If the user doesn't exist, return an error
         if (!memberUser) {
             return res.status(404).json({ error: "User not found" });
@@ -253,7 +278,7 @@ exports.updateMemberInServer = async (req, res) => {
             server: serverId,
             member: memberUser._id,
         });
-        console.log(existingMembership);
+        console.log("existsss", existingMembership);
 
         if (!existingMembership) {
             const newMembership = new Membership({
@@ -269,8 +294,10 @@ exports.updateMemberInServer = async (req, res) => {
 
         // Update the isAdmin value if provided
         if (admin !== undefined) {
+            console.log("admin", admin);
             existingMembership.isAdmin = admin;
         }
+        console.log(existingMembership);
 
         await existingMembership.save();
 
@@ -315,8 +342,8 @@ exports.removeMemberFromServer = async (req, res) => {
         }
 
         // Find the user by email
-        const { email } = req.body;
-        const memberUser = await User.findOne({ email }).select("-password");
+        const { member } = req.body;
+        const memberUser = await User.findById(member).select("-password");
 
         // If the user doesn't exist, return an error
         if (!memberUser) {
