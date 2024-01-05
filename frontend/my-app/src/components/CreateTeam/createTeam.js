@@ -92,10 +92,24 @@ import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 
-const CreateTeam = ({ onClose, darkMode, toggleDarkMode }) => {
+const CreateTeam = ({
+    onClose,
+    darkMode,
+    toggleDarkMode,
+    setTeamsAdmin,
+    teamsAdmin,
+}) => {
     const navigate = useNavigate();
     const [teamName, setTeamName] = useState("");
     const [teamDescription, setTeamDescription] = useState("");
+
+    const updateTeams = (team) => {
+        try {
+            setTeamsAdmin([...teamsAdmin, team]);
+        } catch (error) {
+            console.error("Error updating teams: ", error);
+        }
+    };
 
     const handleCreateTeam = async (e) => {
         e.preventDefault();
@@ -116,6 +130,8 @@ const CreateTeam = ({ onClose, darkMode, toggleDarkMode }) => {
             );
 
             if (response.data.message === "Server created successfully") {
+                console.log("Server created successfully");
+                updateTeams(response.data.server);
                 onClose(); // Close the modal
                 // setModalIsOpen(false);
             } else {

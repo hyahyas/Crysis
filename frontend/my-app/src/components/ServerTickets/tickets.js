@@ -18,6 +18,7 @@ const Tickets = () => {
     const [selectedTicket, setSelectedTicket] = useState(null);
     const [newStatus, setNewStatus] = useState("");
     const serverName = useSelector((state) => state.serverName);
+    const [notAuthorized, setNotAuthorized] = useState(false);
 
     const handleTicketClick = (ticket) => {
         setSelectedTicket(ticket);
@@ -63,6 +64,7 @@ const Tickets = () => {
                 );
                 console.log(response.data);
                 setTickets(response.data);
+                setNotAuthorized(false);
             } catch (error) {
                 console.error("Error fetching tickets: ", error);
             }
@@ -96,6 +98,7 @@ const Tickets = () => {
 
     const handleCreateTicket = (newTicket) => {
         setTickets((prevTickets) => [newTicket, ...prevTickets]);
+
         closeModal();
     };
 

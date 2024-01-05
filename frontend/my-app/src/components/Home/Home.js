@@ -285,7 +285,7 @@ const Home = () => {
                         {teamsAdmin.map((team) => (
                             <div
                                 key={team._id}
-                                className={`bg-white p-4 rounded-md shadow-md ${"dark:bg-gray-500"} h-full`}
+                                className={`p-4 rounded-md shadow-md bg-gray-100 h-full`}
                             >
                                 <button
                                     onClick={() => handleMembersPage(team._id)}
@@ -348,7 +348,7 @@ const Home = () => {
                         {teamsMember.map((team) => (
                             <div
                                 key={team._id}
-                                className={`bg-white p-4 rounded-md shadow-md ${"dark:bg-gray-700"} h-full`}
+                                className={`p-4 rounded-md shadow-md bg-gray-300 h-full`}
                             >
                                 {/* <button
                                     onClick={() => handleMembersPage(team._id)}
@@ -410,6 +410,8 @@ const Home = () => {
                     <CreateTeam
                         // darkMode={darkMode}
                         onClose={onClose}
+                        setTeamsAdmin={setTeamsAdmin}
+                        teamsAdmin={teamsAdmin}
                     />
                 </Modal>
             </div>

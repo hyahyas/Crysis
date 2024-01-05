@@ -6,6 +6,7 @@ const TicketForm = ({ serverId, closeModal, handleCreateTicket }) => {
     const [description, setDescription] = useState("");
     const [status, setStatus] = useState("To Do"); // Default status
     const [assigneeEmail, setAssigneeEmail] = useState("");
+    const [notAuthorized, setNotAuthorized] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -33,8 +34,21 @@ const TicketForm = ({ serverId, closeModal, handleCreateTicket }) => {
             } else {
                 console.error("Ticket creation failed:", response.data.message);
             }
+            setNotAuthorized(false);
         } catch (error) {
             console.error("Error creating ticket: ", error);
+            if (error.response && error.response.status === 403) {
+                console.error(
+                    "You are not authorized to delete this ticket----"
+                );
+                setNotAuthorized(true);
+            } else {
+                console.error(
+                    "An error occurred while adding the member:---------",
+                    error.message
+                );
+                // Handle other errors
+            }
         }
     };
 
@@ -43,7 +57,10 @@ const TicketForm = ({ serverId, closeModal, handleCreateTicket }) => {
             <h2 className="text-2xl font-bold mb-4">Create Ticket</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                    <label htmlFor="title" className="block text-sm font-medium text-gray-900">
+                    <label
+                        htmlFor="title"
+                        className="block text-sm font-medium text-gray-900"
+                    >
                         Title
                     </label>
                     <input
@@ -57,7 +74,10 @@ const TicketForm = ({ serverId, closeModal, handleCreateTicket }) => {
                 </div>
 
                 <div>
-                    <label htmlFor="description" className="block text-sm font-medium text-gray-900">
+                    <label
+                        htmlFor="description"
+                        className="block text-sm font-medium text-gray-900"
+                    >
                         Description
                     </label>
                     <textarea
@@ -70,7 +90,10 @@ const TicketForm = ({ serverId, closeModal, handleCreateTicket }) => {
                 </div>
 
                 <div>
-                    <label htmlFor="assignee email" className="block text-sm font-medium text-gray-900">
+                    <label
+                        htmlFor="assignee email"
+                        className="block text-sm font-medium text-gray-900"
+                    >
                         Assignee Email
                     </label>
                     <input
@@ -84,7 +107,10 @@ const TicketForm = ({ serverId, closeModal, handleCreateTicket }) => {
                 </div>
 
                 <div>
-                    <label htmlFor="status" className="block text-sm font-medium text-gray-900">
+                    <label
+                        htmlFor="status"
+                        className="block text-sm font-medium text-gray-900"
+                    >
                         Status
                     </label>
                     <select
@@ -100,6 +126,13 @@ const TicketForm = ({ serverId, closeModal, handleCreateTicket }) => {
                         <option value="Abandoned">Abandoned</option>
                     </select>
                 </div>
+
+                {notAuthorized && (
+                    <p style={{ color: "red" }}>
+                        dear sir sami, this user does not exist, and shall be
+                        created first
+                    </p>
+                )}
 
                 <div className="flex justify-between">
                     <button
